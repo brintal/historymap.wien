@@ -29,7 +29,6 @@ public class CulhervizController {
 
     private static final String REQUEST_MAPPING_GET_ARTIFACT_IMAGE = "/getArtifactImage";
 
-    @CrossOrigin(origins = "http://localhost:4200")
     @RequestMapping("/artifacts")
     public List<SimpleArtifact> artifacts() {
 
@@ -40,7 +39,6 @@ public class CulhervizController {
 
     }
 
-    @CrossOrigin(origins = "http://localhost:4200")
     @RequestMapping(value = REQUEST_MAPPING_GET_ARTIFACT_IMAGE, method = RequestMethod.GET)
     public String getArtifactImage(@RequestParam(value = "id") Long artifactId, HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -64,7 +62,6 @@ public class CulhervizController {
 
     private int counter = 0;
 
-    @CrossOrigin(origins = "http://localhost:4200")
     @RequestMapping(value = "/getArtifactImageIcon", method = RequestMethod.GET)
     public String getArtifactImageIcon(@RequestParam(value = "id") Long artifactId, HttpServletResponse response) {
         try {

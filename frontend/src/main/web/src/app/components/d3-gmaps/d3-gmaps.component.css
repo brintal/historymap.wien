@@ -1,0 +1,28 @@
+/*agm-map {*/
+  /*height: 600px;*/
+/*}*/
+
+
+#map {
+  width: 1000px;
+  height: 800px;
+  margin: 0;
+  padding: 0;
+}
+
+.stations, .stations svg {
+  position: absolute;
+}
+
+.stations svg {
+  width: 60px;
+  height: 20px;
+  padding-right: 100px;
+  font: 10px sans-serif;
+}
+
+.stations circle {
+  fill: #00BFFF;
+  stroke: black;
+  stroke-width: 1.5px;
+}
