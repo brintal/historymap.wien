@@ -11,8 +11,6 @@
 
     <artifactId>persistence</artifactId>
 
-
-
     <dependencies>
 
         <dependency>

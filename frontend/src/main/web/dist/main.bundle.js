@@ -1044,14 +1044,9 @@ var AppSettings = (function () {
     return AppSettings;
 }());
 
-/** DEV CONFIG **/
-// public static API_ENDPOINT = 'http://localhost:8080/';
-// public static API_OPERATION_ALL_ARTIFACTS = 'data/artifacts.json';
-// public static API_OPERATION_FULL_IMAGE = 'getFullSizeArtifactImage?id=';
-// public static API_OPERATION_IMAGE = 'getArtifactImage?id=';
-/** TOMCAT DEPLOYMENT CONFIG **/
 AppSettings.API_ENDPOINT = '/';
-AppSettings.API_OPERATION_ALL_ARTIFACTS = 'data/artifacts.json';
+// public static API_OPERATION_ALL_ARTIFACTS='assets/data/artifacts.json';
+AppSettings.API_OPERATION_ALL_ARTIFACTS = 'artifacts';
 AppSettings.API_OPERATION_FULL_IMAGE = 'getFullSizeArtifactImage?id=';
 AppSettings.API_OPERATION_IMAGE = 'getArtifactImage?id=';
 //# sourceMappingURL=AppSettings.js.map

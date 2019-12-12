@@ -3,9 +3,13 @@ package wien.historymap.ws;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import wien.historymap.dto.SimpleArtifact;
 import wien.historymap.persistence.repo.ArtifactRepository;
 
@@ -16,6 +20,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.net.URL;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -30,12 +35,19 @@ public class CulhervizController {
     private static final String REQUEST_MAPPING_GET_ARTIFACT_IMAGE = "/getArtifactImage";
 
     @RequestMapping("/artifacts")
+    @Cacheable("artifacts")
     public List<SimpleArtifact> artifacts() {
 
+
+        Date before = new Date();
         System.out.println("get All Artifacts called");
-        return artifactRepository.findAllByLocationIsNotNullAndYearIsNotNull();
-//        return artifactRepository.findAllByLocationIsNotNullAndTechniqueIsNotNull();
-//        return artifactRepository.findAllByLocationIsNotNullAndYearBetween(1970, 2000);
+        List<SimpleArtifact> toRet = artifactRepository.findAllByLocationIsNotNullAndYearIsNotNull();
+//        List<SimpleArtifact> toRet = artifactRepository.findAllByLocationIsNotNullAndTechniqueIsNotNull();
+//        List<SimpleArtifact> toRet = artifactRepository.findAllByLocationIsNotNullAndYearBetween(1970, 2000);
+        Date after = new Date();
+        System.out.println("get All Artifacts finished. took " + (after.getTime() - before.getTime()) + "seconds and found "+toRet.size() + " artifacts.");
+
+        return toRet;
 
     }
 
@@ -43,6 +55,7 @@ public class CulhervizController {
     public String getArtifactImage(@RequestParam(value = "id") Long artifactId, HttpServletRequest request, HttpServletResponse response) {
         try {
             //TODO this is only a workaround because the frontend messes up the popup positions if the images are loaded directly but everything works if they are sent as base64
+            // config pictureStore directory in yaml and read file via inputstream
             URL imageURL = new URL("http://localhost:8080/pictureStore/" + artifactId + "/medium/" + artifactId + ".jpg");
             BufferedImage originalImage = ImageIO.read(imageURL);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
