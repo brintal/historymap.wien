@@ -5,7 +5,7 @@
   <parent>
     <artifactId>parent</artifactId>
     <groupId>wien.historymap</groupId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -21,7 +21,6 @@
         <configuration>
           <nodeVersion>v8.12.0</nodeVersion>
           <npmVersion>6.4.1</npmVersion>
-          <workingDirectory>src/main/web/</workingDirectory>
         </configuration>
         <executions>
           <execution>
