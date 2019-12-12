@@ -12,7 +12,6 @@ import wien.historymap.persistence.repo.ArtifactRepository;
 @SpringBootTest
 public class LocationParserTests {
 
-
     @Autowired
     LocationParser locationParser;
 
