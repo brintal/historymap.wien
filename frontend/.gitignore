@@ -9,6 +9,7 @@
 /node_modules
 /src/main/web/node_modules
 /src/main/web/node
+/src/main/web/dist
 
 # IDEs and editors
 /.idea
