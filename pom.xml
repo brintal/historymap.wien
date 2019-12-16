@@ -6,7 +6,7 @@
 
     <groupId>wien.historymap</groupId>
     <artifactId>parent</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.13-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>historymap.wien parent</name>
 
@@ -15,7 +15,7 @@
         <module>domain</module>
         <module>persistence</module>
         <module>service</module>
-        <module>frontend</module>
+        <module>frontend-ng</module>
         <module>app</module>
     </modules>
 

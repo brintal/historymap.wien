@@ -18,9 +18,13 @@ export class AppComponent implements OnInit{
         link: './list',
         index: 0
       }, {
+        label: 'Map',
+        link: './map',
+        index: 1
+      }, {
         label: 'Dummy',
         link: './dummy',
-        index: 1
+        index: 2
       }
     ];
   }

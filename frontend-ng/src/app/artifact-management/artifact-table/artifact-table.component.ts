@@ -2,10 +2,11 @@ import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTable, MatTableDataSource} from '@angular/material/table';
-import {Artifact} from "../shared/artifact";
 import {ArtifactService} from "../shared/artifact.service";
 import {MatBottomSheet} from "@angular/material/bottom-sheet";
 import {ArtifactImagePopupComponent} from "../artifact-image-popup/artifact-image-popup.component";
+import {Artifact} from "../../shared/artifact";
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-artifact-table',
@@ -26,7 +27,7 @@ export class ArtifactTableComponent implements AfterViewInit, OnInit {
               private _bottomSheet: MatBottomSheet) {
   }
 
-  ngOnInit() {d3-ng2
+  ngOnInit() {
     this.artifactService.getArtifacts().subscribe(artifacts => {
       this.dataSource = new MatTableDataSource<Artifact>(artifacts);
       this.dataSource.paginator = this.paginator;
@@ -47,9 +48,13 @@ export class ArtifactTableComponent implements AfterViewInit, OnInit {
     }
   }
 
-  openBottomSheet(id: string) {
+  openBottomSheet(id: string, longitude: number, latitude: number) {
     this._bottomSheet.open(ArtifactImagePopupComponent, {
-      data: {imageId: id}
+      data: {
+        imageId: id,
+        longitude: longitude,
+        latitude: latitude
+      }
     })
   }
 }

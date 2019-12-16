@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ArtifactService} from "../shared/artifact.service";
-import {Artifact} from "../shared/artifact";
+import {Artifact} from "../../shared/artifact";
 
 @Component({
   selector: 'app-artifact-list',

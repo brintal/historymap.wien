@@ -13,7 +13,7 @@
         <ng-container matColumnDef="icon">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Icon</th>
           <td mat-cell *matCellDef="let row">
-            <img src="/pictureStore/{{row.id}}/icon/{{row.id}}.jpg" alt="artifact icon" (click)="openBottomSheet(row.id)">
+            <img src="/pictureStore/{{row.id}}/icon/{{row.id}}.jpg" alt="artifact icon" (click)="openBottomSheet(row.id, row.longitude, row.latitude)">
           </td>
         </ng-container>
 

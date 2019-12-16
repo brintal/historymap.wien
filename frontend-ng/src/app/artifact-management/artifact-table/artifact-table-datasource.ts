@@ -3,7 +3,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {map} from 'rxjs/operators';
 import {merge, Observable} from 'rxjs';
-import {Artifact} from "../shared/artifact";
+import {Artifact} from "../../shared/artifact";
 
 /**
  * Data source for the ArtifactTable view. This class should

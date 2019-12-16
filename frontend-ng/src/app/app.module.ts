@@ -21,6 +21,9 @@ import {MatInputModule} from "@angular/material/input";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {ArtifactImagePopupComponent} from './artifact-management/artifact-image-popup/artifact-image-popup.component';
 import {MatBottomSheetModule} from "@angular/material/bottom-sheet";
+import { ArtifactMapComponent } from './artifact-map/artifact-map/artifact-map.component';
+import { TemporalBarChartComponent } from './artifact-visualization/temporal-bar-chart/temporal-bar-chart.component';
+import {D3Service} from "d3-ng2-service";
 
 @NgModule({
   declarations: [
@@ -28,7 +31,9 @@ import {MatBottomSheetModule} from "@angular/material/bottom-sheet";
     ArtifactListComponent,
     ArtifactTableComponent,
     DummyComponent,
-    ArtifactImagePopupComponent
+    ArtifactImagePopupComponent,
+    ArtifactMapComponent,
+    TemporalBarChartComponent
   ],
   imports: [
     BrowserModule,
@@ -49,7 +54,7 @@ import {MatBottomSheetModule} from "@angular/material/bottom-sheet";
     MatBottomSheetModule
   ],
   entryComponents: [ArtifactImagePopupComponent],
-  providers: [],
+  providers: [D3Service],
   bootstrap: [AppComponent]
 })
 export class AppModule {
