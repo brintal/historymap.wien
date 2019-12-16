@@ -1,0 +1,33 @@
+/*agm-map {*/
+/*height: 600px;*/
+/*}*/
+
+#mapid {
+  height: 80vh;
+}
+
+.leaflet-popup-content {
+  width:auto !important;
+}
+.leaflet-popup-tip-container {
+  left: 190px !important;
+}
+
+.marker-cluster-large div {
+  background-color: #6A1B9A;
+}
+.marker-cluster-large {
+  background-color: #7B1FA2;
+}
+.marker-cluster-medium div {
+  background-color: #9C27B0;
+}
+.marker-cluster-medium {
+  background-color: #AB47BC;
+}
+.marker-cluster-small div {
+  background-color: #BA68C8;
+}
+.marker-cluster-small {
+  background-color: #CE93D8;
+}
