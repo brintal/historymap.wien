@@ -20,7 +20,7 @@ public class CulhervizApplicationTests {
 
     @Test
     public void contextLoads() {
-//        onbFileDownloader.checkPresenceOfAllFiles();
+//        onbFileDownloader.copyAllIconPicturesToTempFolder();
 //        onbParser.updateAllTitles();
     }
 

@@ -1,10 +1,11 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ArtifactImageService} from "../shared/artifact-image.service";
-import Point = L.Point;
 import * as L from 'leaflet';
+import {LatLng} from 'leaflet';
 import 'leaflet.markercluster';
 import {EndpointSettings} from "../../shared/endpoint-settings";
 import {Artifact} from "../../shared/artifact";
+import Point = L.Point;
 
 
 @Component({
@@ -39,7 +40,6 @@ export class ArtifactMapComponent implements OnInit {
   }
 
 
-
   private loadDataToMap() {
     this.artifactImagesService.artifactData$.subscribe((data => {
       this.createClusters(data);
@@ -61,10 +61,12 @@ export class ArtifactMapComponent implements OnInit {
   private createMarker(location: Artifact): L.Layer {
     let marker = L.marker([location.latitude, location.longitude], {icon: ArtifactMapComponent.createDefaultIcon()});
     marker.addEventListener("add", addEvent => marker.setIcon(ArtifactMapComponent.createCustomIconFromAsset(location.id)));
-    marker.bindPopup((layer: L.Layer) => this.createPopup(location), {
-      autoPan: true,
-      autoPanPaddingTopLeft: new Point(50, 500),
-      autoPanPaddingBottomRight: new Point(550, 50)
+    marker.bindPopup((layer: L.Layer) => this.createPopup(location));
+    marker.on('click', event => {
+      let targetPoint: Point = this.map.project(marker.getLatLng(), this.map.getZoom()).subtract([0, 150]);
+      let targetLatLng: LatLng = this.map.unproject(targetPoint, this.map.getZoom());
+      this.map.setView(targetLatLng, this.map.getZoom());
+      // this.map.setView(marker.getLatLng(), this.map.getZoom());
     });
     return marker;
   }
@@ -76,7 +78,9 @@ export class ArtifactMapComponent implements OnInit {
       el.innerHTML =
         `<p>${location.title} (${location.year})</p>` +
         `<a href='${EndpointSettings.API_ENDPOINT}pictureStore/${location.id}/${location.id}.jpg' target='_blank'>
-          <img src='data:image/png;base64, ${base64Image}'/>
+          <div class="crop">
+           <img src='${EndpointSettings.API_ENDPOINT}pictureStore/${location.id}/medium/${location.id}.jpg'/>
+          </div>
          </a>`;
     });
     return el;
@@ -108,7 +112,7 @@ export class ArtifactMapComponent implements OnInit {
       shadowSize: [60, 60],
       shadowAnchor: [27, 35],
       iconAnchor: [12, 21],
-      popupAnchor: [-168, -17]
+      popupAnchor: [-147, -17]
     });
   }
 

@@ -7,6 +7,8 @@ public interface OnbFileDownloader {
 
     void copyAllMediumPicturesToTempFolder();
 
+    void copyAllIconPicturesToTempFolder();
+
     void renameFolders();
 
     void copyAllIcons();

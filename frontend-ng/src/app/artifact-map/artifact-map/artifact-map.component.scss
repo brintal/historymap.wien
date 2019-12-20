@@ -7,27 +7,70 @@
 }
 
 .leaflet-popup-content {
-  width:auto !important;
+  width: auto !important;
 }
+
 .leaflet-popup-tip-container {
-  left: 190px !important;
+  //left: 190px !important;
+}
+
+.leaflet-popup {
+  //left: -100px !important;
 }
 
 .marker-cluster-large div {
   background-color: #6A1B9A;
 }
+
 .marker-cluster-large {
   background-color: #7B1FA2;
 }
+
 .marker-cluster-medium div {
   background-color: #9C27B0;
 }
+
 .marker-cluster-medium {
   background-color: #AB47BC;
 }
+
 .marker-cluster-small div {
   background-color: #BA68C8;
 }
+
 .marker-cluster-small {
   background-color: #CE93D8;
+}
+
+
+.columnHolder {
+  width: 100%;
+  font-size: 0;
+}
+
+.childColumn {
+  font-size: 16px;
+  display: inline-block;
+  width: calc(50% - 2px);
+}
+
+@media screen and (max-width: 800px) {
+  .childColumn {
+    width: 100%;
+  }
+}
+
+.crop {
+  width: 300px;
+  height: 300px;
+  overflow: hidden;
+}
+
+.crop img {
+  //width: 300px;
+  width:100%;
+  height:100%;
+  object-fit: cover;
+  overflow: hidden;
+  //margin: -75px 0 0 -100px;
 }

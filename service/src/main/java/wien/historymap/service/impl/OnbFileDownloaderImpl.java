@@ -98,6 +98,24 @@ public class OnbFileDownloaderImpl implements OnbFileDownloader {
             }
         }
     }
+
+    @Override
+    public void copyAllIconPicturesToTempFolder() {
+        List<Integer> ids = artifactRepository.findAllOnbImageIds();
+
+        int counter = 1;
+        for (Integer bildId : ids) {
+            try {
+                File f = new File("D:/Dev/pictureStoreTest/artifactIconsWithoutBorder/"+bildId+".jpg");
+                File copiedFile = new File("D:/Dev/pictureStoreTest/artifactIconsWithoutBorder/" + bildId + "/iconWithoutBorder/"+bildId+".jpg");
+
+                FileUtils.copyFile(f, copiedFile);
+                System.out.println("image finished: " + counter++);
+            } catch (Exception e) {
+                System.out.println("error while processing image " + bildId);
+            }
+        }
+    }
     @Override
     public void renameFolders() {
         List<Integer> ids = artifactRepository.findAllOnbImageIds();

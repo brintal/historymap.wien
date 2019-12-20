@@ -1,2 +1,9 @@
-<div id="mapid"></div>
-<app-temporal-bar-chart [(getPeriod)]="selectedPeriod" (getPeriodChange)="onChangeSelectedPeriod($event)"></app-temporal-bar-chart>
+<div class="columnHolder">
+  <div class="childColumn">
+    <div id="mapid"></div>
+  </div>
+  <div class="childColumn">
+    <app-temporal-bar-chart [(getPeriod)]="selectedPeriod" (getPeriodChange)="onChangeSelectedPeriod($event)"></app-temporal-bar-chart>
+    <img src="/assets/img/dummyvis1.png" alt="Smiley face" width="800">
+  </div>
+</div>
