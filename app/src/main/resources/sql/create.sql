@@ -125,3 +125,35 @@ CREATE TABLE technique (
     CONSTRAINT technique_pk
 		PRIMARY KEY (id)
 );
+
+
+
+CREATE TABLE technique_category (
+                                    id int not null,
+                                    name text unique,
+                                    CONSTRAINT technique_category_pk
+                                        PRIMARY KEY (id)
+);
+
+ALTER TABLE technique
+    ADD COLUMN category_id int;
+
+ALTER TABLE technique
+    ADD CONSTRAINT category_id_fk
+        FOREIGN KEY (category_id)
+            REFERENCES technique_category;
+
+INSERT INTO technique_category (id, name) values (nextval('hibernate_sequence'), 'Druck');
+INSERT INTO technique_category (id, name) values (nextval('hibernate_sequence'), 'Fotografie');
+INSERT INTO technique_category (id, name) values (nextval('hibernate_sequence'), 'Malerei/Zeichnung');
+
+UPDATE technique SET category_id = (select id from technique_category where name = 'Druck')
+where name in ('Lithografie','Kupferstich','Druck','Buchdruck','Kupferstich, handkoloriert','Kupferstich Radierung','Schabkunst','Punktierstich','Stahlstich','Kupferstich, koloriert','Xylografie (Holzstich)','Salzpapier','Zinkotypie','Lichtdruck','Heliogravure','Chromolithographie','Edeldruckverfahren','Farbdruck','Offsetdruck','Farblithografie','Bromölumdruck Edeldruckverfahren Vintage Print');
+
+
+UPDATE technique SET category_id = (select id from technique_category where name = 'Fotografie')
+where name in('Schwarz-Weiß-Negativ','Silbergelatineabzug','Schwarz-Weiß-Negativ, Glasplatte','Farbnegativ (Colornegativ)','Glasplatte','Albuminabzug','Albuminpapier','Schwarz-Weiß-Diapositiv','Schwarz-Weiß-Negativ (Film)','Schwarz-Weiß-Abzug','Kollodiumpapier','Fotografie','Kopierverfahren','Schwarz-Weiß-Negativ Schwarz-Weiß-Negativ (Film)','Farbdiapositiv','Autochrome','Schwarz-Weiß-Abzug Schwarz-Weiß-Abzug','Autochrome Platten');
+
+
+UPDATE technique SET category_id = (select id from technique_category where name = 'Malerei/Zeichnung')
+where name in('Federzeichnung','Federzeichnung, Aquarell','Radierung','Aquarell','Graphit','Mischtechnik','Bleistiftzeichnung','Pastell','Deckfarben','Handzeichnung','Pinselzeichnung','Aquatinta','Gouache','Aquatinta Radierung');

@@ -3,12 +3,13 @@ import {RouterModule, Routes} from '@angular/router';
 import {ArtifactListComponent} from "./artifact-management/artifact-list/artifact-list.component";
 import {DummyComponent} from "./artifact-management/dummy/dummy.component";
 import {ArtifactMapComponent} from "./artifact-map/artifact-map/artifact-map.component";
+import {TechniqueSunburstComponent} from "./artifact-visualization/technique-sunburst/technique-sunburst.component";
 
 const routes: Routes = [
-  {path: '', redirectTo: '/list', pathMatch: 'full'},
+  {path: '', redirectTo: '/map', pathMatch: 'full'},
   {path: 'list', component: ArtifactListComponent},
   {path: 'map', component: ArtifactMapComponent},
-  {path: 'dummy', component: DummyComponent}
+  {path: 'sunburst', component: TechniqueSunburstComponent}
 ];
 
 @NgModule({

@@ -18,4 +18,7 @@ public interface SimpleArtifact {
     @Value("#{target.location.longitude}")
     Double getLongitude();
 
+    @Value("#{target.technique?.category?.name ?: 'not defined'}")
+    String getTechniqueCategory();
+
 }

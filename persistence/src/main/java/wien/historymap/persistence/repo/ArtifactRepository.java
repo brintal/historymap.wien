@@ -25,9 +25,11 @@ public interface ArtifactRepository extends JpaRepository<Artifact, Integer>, Jp
 
     List<SimpleArtifact> findAllByLocationIsNotNullAndYearIsNotNull();
 
-    List<SimpleArtifact> findAllByLocationIsNotNullAndTechniqueIsNotNull();
+    List<SimpleArtifact> findAllByLocationIsNotNullAndTechniqueIsNotNullAndYearIsNotNull();
 
     List<SimpleArtifact> findAllByLocationIsNotNullAndYearBetween(Integer yearMin, Integer yearMax);
+
+    Long countByTechniqueNullAndYearIsNotNullAndLocationIsNotNull();
 
 
 }

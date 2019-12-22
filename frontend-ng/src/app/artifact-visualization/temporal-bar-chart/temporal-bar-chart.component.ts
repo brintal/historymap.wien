@@ -102,6 +102,7 @@ export class TemporalBarChartComponent implements OnInit {
       .data(data)
       .enter().append("rect")
       .attr("class", "bar")
+      .attr("class", d=>`bar-${d[0].toString()}`)
       .attr("x", d => this.x(d[0].toString()))
       .attr("y", d => {
         if (d[1] != 0)

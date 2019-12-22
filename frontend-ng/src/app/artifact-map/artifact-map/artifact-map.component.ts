@@ -20,7 +20,6 @@ export class ArtifactMapComponent implements OnInit {
   private map: L.Map;
   private markers: L.MarkerClusterGroup;
 
-
   selectedPeriod: [number, number] = [0, 2000];
 
   constructor(artifactImagesService: ArtifactImageService) {
@@ -60,7 +59,7 @@ export class ArtifactMapComponent implements OnInit {
 
   private createMarker(location: Artifact): L.Layer {
     let marker = L.marker([location.latitude, location.longitude], {icon: ArtifactMapComponent.createDefaultIcon()});
-    marker.addEventListener("add", addEvent => marker.setIcon(ArtifactMapComponent.createCustomIconFromAsset(location.id)));
+    marker.addEventListener("add", addEvent => marker.setIcon(ArtifactMapComponent.createDivIcon(location)));
     marker.bindPopup((layer: L.Layer) => this.createPopup(location));
     marker.on('click', event => {
       let targetPoint: Point = this.map.project(marker.getLatLng(), this.map.getZoom()).subtract([0, 150]);
@@ -116,6 +115,16 @@ export class ArtifactMapComponent implements OnInit {
     });
   }
 
+  private static createDivIcon(artifact: Artifact): L.DivIcon {
+    return new L.DivIcon({
+      className: 'my-div-icon',
+      iconAnchor: [12, 21],
+      popupAnchor: [-147, -17],
+      html: `<span class='icon-div-badge'>&nbsp${this.getBadgeIconForTechniqueCategory(artifact.techniqueCategory)}&nbsp</span>` + `<img class='icon-div-image icon-div-image-${this.getRoundedYear(artifact.year)}' src='/pictureStore/${artifact.id}/iconWithoutBorder/${artifact.id}.jpg'/>`
+
+    });
+  }
+
   private createCustomIcon(iconBase64: string): L.Icon {
     return L.icon({
       iconUrl: "data:image/png;base64, " + iconBase64,
@@ -143,4 +152,25 @@ export class ArtifactMapComponent implements OnInit {
     this.loadDataToMap();
   }
 
+  private static getRoundedYear(year: number): number {
+    if (year < 1650) {
+      return 1650;
+    } else {
+      return year - (year % 10);
+    }
+  }
+
+  private static getBadgeIconForTechniqueCategory(techniqueCategory: string): string {
+    if (techniqueCategory.startsWith("Druck")) {
+      return 'horizontal_split';
+    }
+    if (techniqueCategory.startsWith("Fotografie")) {
+      return 'camera';
+    }
+    if (techniqueCategory.startsWith("Malerei")) {
+      return 'brush';
+    }
+    return 'select_all';
+
+  }
 }

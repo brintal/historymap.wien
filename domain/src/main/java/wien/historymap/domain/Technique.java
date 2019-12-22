@@ -2,9 +2,7 @@ package wien.historymap.domain;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.List;
 
 @Data
@@ -16,5 +14,9 @@ public class Technique extends AbstractEntity {
 
     @OneToMany(mappedBy = "technique")
     private List<Artifact> artifacts;
+
+    @JoinColumn(name = "category_id")
+    @ManyToOne
+    private TechniqueCategory category;
 
 }

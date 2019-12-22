@@ -6,12 +6,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import wien.historymap.domain.Technique;
+import wien.historymap.domain.TechniqueCategory;
 import wien.historymap.dto.SimpleArtifact;
+import wien.historymap.dto.SunburstDto;
 import wien.historymap.persistence.repo.ArtifactRepository;
+import wien.historymap.persistence.repo.TechniqueCategoryRepository;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +25,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -29,6 +35,9 @@ public class CulhervizController {
 
     @Autowired
     ArtifactRepository artifactRepository;
+
+    @Autowired
+    TechniqueCategoryRepository techniqueCategoryRepository;
 
     private static final String DOWNLOAD_PATH = "/pictureStore/";
     private static final String ICON_PATH = "D:/Dev/";
@@ -43,10 +52,10 @@ public class CulhervizController {
         Date before = new Date();
         System.out.println("get All Artifacts called");
         List<SimpleArtifact> toRet = artifactRepository.findAllByLocationIsNotNullAndYearIsNotNull();
-//        List<SimpleArtifact> toRet = artifactRepository.findAllByLocationIsNotNullAndTechniqueIsNotNull();
+//        List<SimpleArtifact> toRet = artifactRepository.findAllByLocationIsNotNullAndTechniqueIsNotNullAndYearIsNotNull();
 //        List<SimpleArtifact> toRet = artifactRepository.findAllByLocationIsNotNullAndYearBetween(1970, 2000);
         Date after = new Date();
-        System.out.println("get All Artifacts finished. took " + (after.getTime() - before.getTime()) + "seconds and found "+toRet.size() + " artifacts.");
+        System.out.println("get All Artifacts finished. took " + (after.getTime() - before.getTime()) + "seconds and found " + toRet.size() + " artifacts.");
 
         return toRet;
 
@@ -99,6 +108,40 @@ public class CulhervizController {
             return ResponseEntity.ok(image);
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Transactional(readOnly = true)
+    @RequestMapping(value = "/getSunburstTechniqueData", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public SunburstDto getSunburstTechniqueData() {
+        System.out.println("getSunburstTechniqueData called");
+        try {
+            SunburstDto toRet = new SunburstDto();
+            toRet.setName("Techniken");
+            toRet.setChildren(new ArrayList<>());
+            for (TechniqueCategory category : techniqueCategoryRepository.findAll()) {
+                SunburstDto categoryDto = new SunburstDto();
+                categoryDto.setChildren(new ArrayList<>());
+                categoryDto.setName(category.getName());
+                for (Technique technique : category.getTechniques()) {
+                    SunburstDto techniqueDto = new SunburstDto();
+                    techniqueDto.setName(technique.getName());
+                    techniqueDto.setValue((long) technique.getArtifacts().size());
+                    categoryDto.getChildren().add(techniqueDto);
+                }
+                toRet.getChildren().add(categoryDto);
+            }
+
+            SunburstDto undefined = new SunburstDto();
+            undefined.setName("Nicht zugeordnet");
+            undefined.setValue(artifactRepository.countByTechniqueNullAndYearIsNotNullAndLocationIsNotNull());
+            toRet.getChildren().add(undefined);
+
+            System.out.println("getSunburstTechniqueData finished");
+            return toRet;
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;

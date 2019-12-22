@@ -24,6 +24,7 @@ import {MatBottomSheetModule} from "@angular/material/bottom-sheet";
 import { ArtifactMapComponent } from './artifact-map/artifact-map/artifact-map.component';
 import { TemporalBarChartComponent } from './artifact-visualization/temporal-bar-chart/temporal-bar-chart.component';
 import {D3Service} from "d3-ng2-service";
+import { TechniqueSunburstComponent } from './artifact-visualization/technique-sunburst/technique-sunburst.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import {D3Service} from "d3-ng2-service";
     DummyComponent,
     ArtifactImagePopupComponent,
     ArtifactMapComponent,
-    TemporalBarChartComponent
+    TemporalBarChartComponent,
+    TechniqueSunburstComponent
   ],
   imports: [
     BrowserModule,

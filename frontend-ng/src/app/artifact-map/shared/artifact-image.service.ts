@@ -25,6 +25,6 @@ export class ArtifactImageService {
   }
 
   private static toArtifact(r: any): Artifact {
-    return new Artifact(r.id, r.title, r.longitude, r.latitude, r.year);
+    return new Artifact(r.id, r.title, r.longitude, r.latitude, r.year, r.techniqueCategory);
   }
 }
