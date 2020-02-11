@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable, of} from "rxjs";
 import {catchError, tap} from "rxjs/operators";
-import {Artifact} from "../../shared/artifact";
+import {Artifact} from "../../shared/generated/domain";
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +13,11 @@ export class ArtifactService {
     private http: HttpClient) {
   }
 
-  /** GET heroes from the server */
   getArtifacts(): Observable<Artifact[]> {
     return this.http.get<Artifact[]>('/api/artifacts')
       .pipe(
-        tap(_ => console.log('fetched heroes')),
-        catchError(this.handleError<Artifact[]>('getHeroes', []))
+        tap(_ => console.log('fetched artifacts')),
+        catchError(this.handleError<Artifact[]>('getArtifacts', []))
       );
   }
 

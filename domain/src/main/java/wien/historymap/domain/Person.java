@@ -1,5 +1,6 @@
 package wien.historymap.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -36,9 +37,11 @@ public class Person extends AbstractEntity {
     private String musiklexikonUrl; //see http://www.bildarchivaustria.at/Pages/ImageDetail.aspx?p_iBildID=13823655
 
     @ManyToMany(mappedBy = "authors")
+    @JsonBackReference
     private List<Artifact> createdArtifacts;
 
     @ManyToMany(mappedBy = "motifs")
+    @JsonBackReference
     private List<Artifact> picturedIn;
 
 }

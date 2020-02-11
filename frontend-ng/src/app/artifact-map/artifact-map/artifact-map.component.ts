@@ -4,8 +4,13 @@ import * as L from 'leaflet';
 import {LatLng} from 'leaflet';
 import 'leaflet.markercluster';
 import {EndpointSettings} from "../../shared/endpoint-settings";
-import {Artifact} from "../../shared/artifact";
 import Point = L.Point;
+import {Artifact, Technique} from "../../shared/generated/domain";
+import {ArtifactDetailsComponent} from "../../artifact-management/artifact-details/artifact-details.component";
+import {MatBottomSheet} from "@angular/material/bottom-sheet";
+import {MatDialog} from "@angular/material/dialog";
+import { NgElement, WithProperties } from '@angular/elements';
+import {ArtifactMapPopupComponent} from "../artifact-map-popup/artifact-map-popup.component";
 
 
 @Component({
@@ -19,6 +24,7 @@ export class ArtifactMapComponent implements OnInit {
   private artifactImagesService: ArtifactImageService;
   private map: L.Map;
   private markers: L.MarkerClusterGroup;
+  private data: Artifact[];
 
   selectedPeriod: [number, number] = [0, 2000];
 
@@ -41,6 +47,7 @@ export class ArtifactMapComponent implements OnInit {
 
   private loadDataToMap() {
     this.artifactImagesService.artifactData$.subscribe((data => {
+      this.data = data;
       this.createClusters(data);
     }));
   }
@@ -50,17 +57,17 @@ export class ArtifactMapComponent implements OnInit {
     this.markers = L.markerClusterGroup({
       removeOutsideVisibleBounds: true
     });
-    data.forEach(location => {
-      if (location.year >= this.selectedPeriod[0] && location.year <= this.selectedPeriod[1])
-        this.markers.addLayer(this.createMarker(location))
+    data.forEach(artifact => {
+      if (artifact.year >= this.selectedPeriod[0] && artifact.year <= this.selectedPeriod[1])
+        this.markers.addLayer(this.createMarker(artifact))
     });
     this.map.addLayer(this.markers);
   }
 
-  private createMarker(location: Artifact): L.Layer {
-    let marker = L.marker([location.latitude, location.longitude], {icon: ArtifactMapComponent.createDefaultIcon()});
-    marker.addEventListener("add", addEvent => marker.setIcon(ArtifactMapComponent.createDivIcon(location)));
-    marker.bindPopup((layer: L.Layer) => this.createPopup(location));
+  private createMarker(artifact: Artifact): L.Layer {
+    let marker = L.marker([artifact.location.latitude, artifact.location.longitude], {icon: ArtifactMapComponent.createDefaultIcon()});
+    marker.addEventListener("add", addEvent => marker.setIcon(ArtifactMapComponent.createDivIcon(artifact)));
+    marker.bindPopup((layer: L.Layer) => this.createPopup(artifact));
     marker.on('click', event => {
       let targetPoint: Point = this.map.project(marker.getLatLng(), this.map.getZoom()).subtract([0, 150]);
       let targetLatLng: LatLng = this.map.unproject(targetPoint, this.map.getZoom());
@@ -71,19 +78,22 @@ export class ArtifactMapComponent implements OnInit {
   }
 
 
-  private createPopup(location: Artifact) {
-    let el = document.createElement('div');
-    this.artifactImagesService.getImage(location.id).subscribe(base64Image => {
-      el.innerHTML =
-        `<p>${location.title} (${location.year})</p>` +
-        `<a href='${EndpointSettings.API_ENDPOINT}pictureStore/${location.id}/${location.id}.jpg' target='_blank'>
-          <div class="crop">
-           <img src='${EndpointSettings.API_ENDPOINT}pictureStore/${location.id}/medium/${location.id}.jpg'/>
-          </div>
-         </a>`;
-    });
-    return el;
+  private createPopup(artifact: Artifact) {
+    const popupEl: NgElement & WithProperties<ArtifactMapPopupComponent> = document.createElement('popup-element') as any;
+    popupEl.artifact = artifact;
+//     let el = document.createElement('div');
+//       el.innerHTML =
+//         `<p>${artifact.title} (${artifact.year})</p>` +
+//         `
+// <!-- <a href='${EndpointSettings.API_ENDPOINT}pictureStore/${artifact.onbImageId}/${artifact.onbImageId}.jpg' target='_blank'>-->
+//           <div class="crop" onclick="alert('blaaa')">
+//            <img src='${EndpointSettings.API_ENDPOINT}pictureStore/${artifact.onbImageId}/medium/${artifact.onbImageId}.jpg'/>
+//           </div>
+// <!--         </a>-->
+// `;
+    return popupEl;
   }
+
 
   private static createBackgroundLayer(): L.TileLayer {
     return L.tileLayer('https://{s}.tile.openstreetmap.se/hydda/full/{z}/{x}/{y}.png', {
@@ -103,9 +113,9 @@ export class ArtifactMapComponent implements OnInit {
     });
   }
 
-  private static createCustomIconFromAsset(id: number): L.Icon {
+  private static createCustomIconFromAsset(onbImageId: number): L.Icon {
     return L.icon({
-      iconUrl: EndpointSettings.API_ENDPOINT + 'pictureStore/' + id + '/icon/' + id + '.jpg',
+      iconUrl: EndpointSettings.API_ENDPOINT + 'pictureStore/' + onbImageId + '/icon/' + onbImageId + '.jpg',
       shadowUrl: '/assets/img/sample_shadow4.png',
       iconSize: [30, 30],
       shadowSize: [60, 60],
@@ -119,8 +129,9 @@ export class ArtifactMapComponent implements OnInit {
     return new L.DivIcon({
       className: 'my-div-icon',
       iconAnchor: [12, 21],
-      popupAnchor: [-147, -17],
-      html: `<span class='icon-div-badge'>&nbsp${this.getBadgeIconForTechniqueCategory(artifact.techniqueCategory)}&nbsp</span>` + `<img class='icon-div-image icon-div-image-${this.getRoundedYear(artifact.year)}' src='/pictureStore/${artifact.id}/iconWithoutBorder/${artifact.id}.jpg'/>`
+      popupAnchor: [5, -17],
+      html: `<span class='icon-div-badge'>&nbsp${this.getBadgeIconForTechnique(artifact.technique)}&nbsp</span>` +
+        `<img class='icon-div-image icon-div-image-${this.getRoundedYear(artifact.year)}' src='/pictureStore/${artifact.onbImageId}/iconWithoutBorder/${artifact.onbImageId}.jpg'/>`
 
     });
   }
@@ -160,14 +171,17 @@ export class ArtifactMapComponent implements OnInit {
     }
   }
 
-  private static getBadgeIconForTechniqueCategory(techniqueCategory: string): string {
-    if (techniqueCategory.startsWith("Druck")) {
+  private static getBadgeIconForTechnique(technique: Technique): string {
+    if (technique === null || technique.category === null) {
+      return 'select_all';
+    }
+    if (technique.category.name.startsWith("Druck")) {
       return 'horizontal_split';
     }
-    if (techniqueCategory.startsWith("Fotografie")) {
+    if (technique.category.name.startsWith("Fotografie")) {
       return 'camera';
     }
-    if (techniqueCategory.startsWith("Malerei")) {
+    if (technique.category.name.startsWith("Malerei")) {
       return 'brush';
     }
     return 'select_all';

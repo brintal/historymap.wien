@@ -19,43 +19,43 @@
 }
 
 .marker-cluster-large div {
-  background-color: #6A1B9A;
+  background-color: #d84315;
 }
 
 .marker-cluster-large {
-  background-color: #7B1FA2;
+  background-color: #ff5722;
 }
 
 .marker-cluster-medium div {
-  background-color: #9C27B0;
+  background-color: #ff5722;
 }
 
 .marker-cluster-medium {
-  background-color: #AB47BC;
+  background-color: #ff8a65;
 }
 
 .marker-cluster-small div {
-  background-color: #BA68C8;
+  background-color: #ff8a65;
 }
 
 .marker-cluster-small {
-  background-color: #CE93D8;
+  background-color: #ffab91;
 }
 
 
-.columnHolder {
+.mapColumnHolder {
   width: 100%;
   font-size: 0;
 }
 
-.childColumn {
+.mapChildColumn {
   font-size: 16px;
   display: inline-block;
   width: calc(50% - 2px);
 }
 
 @media screen and (max-width: 800px) {
-  .childColumn {
+  .mapChildColumn {
     width: 100%;
   }
 }
@@ -93,74 +93,41 @@
   box-shadow: 5px 5px 5px grey;
 }
 
-.icon-div-image-1650 { border-color: #0074D9;}
-.icon-div-image-1660 { border-color: #0279D0;}
-.icon-div-image-1670 { border-color: #057EC7;}
-.icon-div-image-1680 { border-color: #0883BE;}
-.icon-div-image-1690 { border-color: #0A88B5;}
-.icon-div-image-1700 { border-color: #0D8DAC;}
-.icon-div-image-1710 { border-color: #1093A3;}
-.icon-div-image-1720 { border-color: #12989A;}
-.icon-div-image-1730 { border-color: #159D91;}
-.icon-div-image-1740 { border-color: #18A288;}
-.icon-div-image-1750 { border-color: #1BA77F;}
-.icon-div-image-1760 { border-color: #1DAC76;}
-.icon-div-image-1770 { border-color: #20B26D;}
-.icon-div-image-1780 { border-color: #23B764;}
-.icon-div-image-1790 { border-color: #25BC5B;}
-.icon-div-image-1800 { border-color: #28C152;}
-.icon-div-image-1810 { border-color: #2BC649;}
-.icon-div-image-1820 { border-color: #2ECC40;}
-.icon-div-image-1830 { border-color: #2ECC40;}
-.icon-div-image-1840 { border-color: #3ACC3C;}
-.icon-div-image-1850 { border-color: #46CD38;}
-.icon-div-image-1860 { border-color: #52CE34;}
-.icon-div-image-1870 { border-color: #5FCF30;}
-.icon-div-image-1880 { border-color: #6BD02D;}
-.icon-div-image-1890 { border-color: #77D129;}
-.icon-div-image-1900 { border-color: #84D225;}
-.icon-div-image-1910 { border-color: #90D321;}
-.icon-div-image-1920 { border-color: #9CD41E;}
-.icon-div-image-1930 { border-color: #A8D51A;}
-.icon-div-image-1940 { border-color: #B5D616;}
-.icon-div-image-1950 { border-color: #C1D712;}
-.icon-div-image-1960 { border-color: #CDD80F;}
-.icon-div-image-1970 { border-color: #DAD90B;}
-.icon-div-image-1980 { border-color: #E6DA07;}
-.icon-div-image-1990 { border-color: #F2DB03;}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.icon-div-image-1650 { border-color: #EF11BD;}
+.icon-div-image-1660 { border-color: #EE12D4;}
+.icon-div-image-1670 { border-color: #ED13EA;}
+.icon-div-image-1680 { border-color: #D914EC;}
+.icon-div-image-1690 { border-color: #C215EB;}
+.icon-div-image-1700 { border-color: #AB16EA;}
+.icon-div-image-1710 { border-color: #9417E9;}
+.icon-div-image-1720 { border-color: #7E18E8;}
+.icon-div-image-1730 { border-color: #6819E7;}
+.icon-div-image-1740 { border-color: #531AE6;}
+.icon-div-image-1750 { border-color: #3E1BE5;}
+.icon-div-image-1760 { border-color: #2A1CE4;}
+.icon-div-image-1770 { border-color: #1D24E3;}
+.icon-div-image-1780 { border-color: #1D39E2;}
+.icon-div-image-1790 { border-color: #1E4EE1;}
+.icon-div-image-1800 { border-color: #1F63E0;}
+.icon-div-image-1810 { border-color: #2077DF;}
+.icon-div-image-1820 { border-color: #218BDE;}
+.icon-div-image-1830 { border-color: #229EDC;}
+.icon-div-image-1840 { border-color: #22B1DB;}
+.icon-div-image-1850 { border-color: #23C4DA;}
+.icon-div-image-1860 { border-color: #24D6D9;}
+.icon-div-image-1870 { border-color: #25D8C9;}
+.icon-div-image-1880 { border-color: #26D7B5;}
+.icon-div-image-1890 { border-color: #26D6A2;}
+.icon-div-image-1900 { border-color: #27D58F;}
+.icon-div-image-1910 { border-color: #28D47D;}
+.icon-div-image-1920 { border-color: #29D36B;}
+.icon-div-image-1930 { border-color: #29D259;}
+.icon-div-image-1940 { border-color: #2AD148;}
+.icon-div-image-1950 { border-color: #2BD037;}
+.icon-div-image-1960 { border-color: #31CF2B;}
+.icon-div-image-1970 { border-color: #42CE2C;}
+.icon-div-image-1980 { border-color: #54CD2D;}
+.icon-div-image-1990 { border-color: #64CC2D;}
 
 
 

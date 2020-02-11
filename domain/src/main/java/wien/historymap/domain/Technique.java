@@ -1,5 +1,6 @@
 package wien.historymap.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ public class Technique extends AbstractEntity {
     private String name;
 
     @OneToMany(mappedBy = "technique")
+    @JsonBackReference
     private List<Artifact> artifacts;
 
     @JoinColumn(name = "category_id")

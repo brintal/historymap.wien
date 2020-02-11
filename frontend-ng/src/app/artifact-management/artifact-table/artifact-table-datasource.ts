@@ -3,7 +3,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {map} from 'rxjs/operators';
 import {merge, Observable} from 'rxjs';
-import {Artifact} from "../../shared/artifact";
+import {Artifact} from "../../shared/generated/domain";
 
 /**
  * Data source for the ArtifactTable view. This class should
@@ -75,13 +75,13 @@ export class ArtifactTableDataSource extends DataSource<Artifact> {
         case 'title':
           return compare(a.title, b.title, isAsc);
         case 'id':
-          return compare(+a.id, +b.id, isAsc);
+          return compare(+a.onbImageId, +b.onbImageId, isAsc);
         case 'year':
           return compare(+a.year, +b.year, isAsc);
         case 'longitude':
-          return compare(+a.longitude, +b.longitude, isAsc);
+          return compare(+a.location.longitude, +b.location.longitude, isAsc);
         case 'latitude':
-          return compare(+a.latitude, +b.latitude, isAsc);
+          return compare(+a.location.latitude, +b.location.latitude, isAsc);
         default:
           return 0;
       }

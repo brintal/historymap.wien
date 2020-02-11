@@ -1,0 +1,46 @@
+.columnHolder {
+  width: 100%;
+}
+
+.leftColumn {
+  width: 50%; float:left;
+}
+.rightColumn {
+  width: 50%; float:left;
+}
+@media(max-width: 800px) {
+  .leftColumn, .rightColumn{width:100%;}
+}
+
+
+ul {
+  list-style-type: none;
+  padding-left: 0px;
+}
+
+ul li {
+  position: relative;
+  padding-left: 200px;
+}
+
+ul li span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-weight: bold;
+}
+
+.crop {
+  width: 450px;
+  height: 450px;
+  overflow: hidden;
+}
+
+.crop img {
+  //width: 300px;
+  //width:100%;
+  //height:100%;
+  object-fit: cover;
+  overflow: hidden;
+  //margin: -75px 0 0 -100px;
+}

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import wien.historymap.domain.Artifact;
 import wien.historymap.domain.Technique;
 import wien.historymap.domain.TechniqueCategory;
 import wien.historymap.dto.SimpleArtifact;
@@ -46,13 +47,13 @@ public class CulhervizController {
 
     @RequestMapping("/artifacts")
     @Cacheable("artifacts")
-    public List<SimpleArtifact> artifacts() {
+    public List<Artifact> artifacts() {
 
 
         Date before = new Date();
         System.out.println("get All Artifacts called");
-        List<SimpleArtifact> toRet = artifactRepository.findAllByLocationIsNotNullAndYearIsNotNull();
-//        List<SimpleArtifact> toRet = artifactRepository.findAllByLocationIsNotNullAndTechniqueIsNotNullAndYearIsNotNull();
+        List<Artifact> toRet = artifactRepository.findAllByLocationIsNotNullAndYearIsNotNull();
+//        List<Artifact> toRet = artifactRepository.findAllByLocationIsNotNullAndTechniqueIsNotNullAndYearIsNotNull();
 //        List<SimpleArtifact> toRet = artifactRepository.findAllByLocationIsNotNullAndYearBetween(1970, 2000);
         Date after = new Date();
         System.out.println("get All Artifacts finished. took " + (after.getTime() - before.getTime()) + "seconds and found " + toRet.size() + " artifacts.");

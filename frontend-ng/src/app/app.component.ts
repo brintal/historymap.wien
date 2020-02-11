@@ -22,8 +22,8 @@ export class AppComponent implements OnInit{
         link: './list',
         index: 1
       }, {
-        label: 'Sunburst',
-        link: './sunburst',
+        label: 'Explore',
+        link: './explore',
         index: 2
       }
     ];

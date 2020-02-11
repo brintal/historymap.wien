@@ -5,8 +5,9 @@ import {MatTable, MatTableDataSource} from '@angular/material/table';
 import {ArtifactService} from "../shared/artifact.service";
 import {MatBottomSheet} from "@angular/material/bottom-sheet";
 import {ArtifactImagePopupComponent} from "../artifact-image-popup/artifact-image-popup.component";
-import {Artifact} from "../../shared/artifact";
-import {DomSanitizer} from "@angular/platform-browser";
+import {Artifact} from "../../shared/generated/domain";
+import {MatDialog} from "@angular/material/dialog";
+import {ArtifactDetailsComponent} from "../artifact-details/artifact-details.component";
 
 @Component({
   selector: 'app-artifact-table',
@@ -24,7 +25,8 @@ export class ArtifactTableComponent implements AfterViewInit, OnInit {
   displayedColumns = ['icon', 'id', 'title', 'year', 'longitude', 'latitude'];
 
   constructor(private artifactService: ArtifactService,
-              private _bottomSheet: MatBottomSheet) {
+              private _bottomSheet: MatBottomSheet,
+              private _dialog: MatDialog) {
   }
 
   ngOnInit() {
@@ -48,13 +50,10 @@ export class ArtifactTableComponent implements AfterViewInit, OnInit {
     }
   }
 
-  openBottomSheet(id: string, longitude: number, latitude: number) {
-    this._bottomSheet.open(ArtifactImagePopupComponent, {
-      data: {
-        imageId: id,
-        longitude: longitude,
-        latitude: latitude
-      }
-    })
+  openDetails(artifact: Artifact) {
+    const dialogRef = this._dialog.open(ArtifactDetailsComponent, {
+      data: artifact,
+      maxHeight: '90vh'
+    });
   }
 }

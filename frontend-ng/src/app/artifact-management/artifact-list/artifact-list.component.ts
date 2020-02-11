@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ArtifactService} from "../shared/artifact.service";
-import {Artifact} from "../../shared/artifact";
+import {Artifact} from "../../shared/generated/domain";
 
 @Component({
   selector: 'app-artifact-list',
@@ -21,7 +21,7 @@ export class ArtifactListComponent implements OnInit {
   getArtifacts(): void {
     this.artifactService.getArtifacts()
       .subscribe(artifacts => artifacts.forEach((artifact) => {
-        console.log(artifact.id + ' ' + artifact.title);
+        console.log(artifact.onbImageId + ' ' + artifact.title);
         })
       );
   }

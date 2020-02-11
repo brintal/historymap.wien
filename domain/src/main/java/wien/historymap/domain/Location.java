@@ -1,5 +1,6 @@
 package wien.historymap.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -20,6 +21,7 @@ public class Location extends AbstractEntity {
     private String formattedAddress;
 
     @OneToOne(mappedBy = "location")
+    @JsonBackReference
     private Artifact artifact;
 
 }

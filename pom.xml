@@ -6,7 +6,7 @@
 
     <groupId>wien.historymap</groupId>
     <artifactId>parent</artifactId>
-    <version>1.0.22-SNAPSHOT</version>
+    <version>1.0.27-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>historymap.wien parent</name>
 
@@ -26,6 +26,7 @@
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <jaxb.version>2.3.0</jaxb.version>
         <java.version>11</java.version>
+        <typescript-generator.version>2.18.565</typescript-generator.version>
     </properties>
 
 

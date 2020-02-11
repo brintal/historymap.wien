@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Observable, ReplaySubject} from "rxjs";
 import {EndpointSettings} from "../../shared/endpoint-settings";
-import {Artifact} from "../../shared/artifact";
 import {HttpClient} from "@angular/common/http";
+import {Artifact} from "../../shared/generated/domain";
 
 @Injectable({
   providedIn: 'root'
@@ -22,9 +22,5 @@ export class ArtifactImageService {
   public fetchAllArtifacts() {
     return this.http.get<Artifact[]>(EndpointSettings.API_OPERATION_ALL_ARTIFACTS)
       .subscribe(artifact => this.artifactDataSubject.next(artifact));
-  }
-
-  private static toArtifact(r: any): Artifact {
-    return new Artifact(r.id, r.title, r.longitude, r.latitude, r.year, r.techniqueCategory);
   }
 }

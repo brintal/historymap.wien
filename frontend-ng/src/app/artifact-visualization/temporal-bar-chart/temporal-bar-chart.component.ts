@@ -2,8 +2,8 @@ import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewEncapsul
 import {D3, D3Service} from "d3-ng2-service";
 import {ArtifactImageService} from "../../artifact-map/shared/artifact-image.service";
 import {ScaleBand, ScaleLogarithmic} from "d3-scale";
-import {Artifact} from "../../shared/artifact";
 import * as d3 from 'd3';
+import {Artifact} from "../../shared/generated/domain";
 
 @Component({
   selector: 'app-temporal-bar-chart',
@@ -40,13 +40,13 @@ export class TemporalBarChartComponent implements OnInit {
     for (var i = 1650; i < 2000; i = i + 10) {
       yearCount.set(i, 0);
     }
-    data.forEach(location => {
+    data.forEach(artifact => {
       let roundedYear: number;
-      if (location.year < 1650) {
+      if (artifact.year < 1650) {
         roundedYear = 1650;
       } else {
 
-        roundedYear = location.year - (location.year % 10);
+        roundedYear = artifact.year - (artifact.year % 10);
       }
       yearCount.set(roundedYear, yearCount.get(roundedYear) + 1);
     });
@@ -63,7 +63,7 @@ export class TemporalBarChartComponent implements OnInit {
 
   private initBarChart(data: [number, number][]) {
     let margin = {top: 20, right: 30, bottom: 30, left: 40};
-    let width = 800 - margin.left - margin.right;
+    let width = 500 - margin.left - margin.right;
     let height = 150 - margin.top - margin.bottom;
 
     this.x = d3.scaleBand().rangeRound([0, width]).padding(0.1);
@@ -72,7 +72,10 @@ export class TemporalBarChartComponent implements OnInit {
     let xAxis = d3.axisBottom(this.x).tickFormat(num => {
       if (num === "1650")
         return "<1650";
-      return num;
+      if (parseInt(num)%50 === 0 ) {
+        return num;
+      }
+      return "";
     });
     let yAxis = d3.axisLeft(this.y).ticks(6).tickFormat(num => {
       if (num < 1)

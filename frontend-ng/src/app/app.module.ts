@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
+import {Injector, NgModule} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -21,10 +21,14 @@ import {MatInputModule} from "@angular/material/input";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {ArtifactImagePopupComponent} from './artifact-management/artifact-image-popup/artifact-image-popup.component';
 import {MatBottomSheetModule} from "@angular/material/bottom-sheet";
-import { ArtifactMapComponent } from './artifact-map/artifact-map/artifact-map.component';
-import { TemporalBarChartComponent } from './artifact-visualization/temporal-bar-chart/temporal-bar-chart.component';
+import {ArtifactMapComponent} from './artifact-map/artifact-map/artifact-map.component';
+import {TemporalBarChartComponent} from './artifact-visualization/temporal-bar-chart/temporal-bar-chart.component';
 import {D3Service} from "d3-ng2-service";
-import { TechniqueSunburstComponent } from './artifact-visualization/technique-sunburst/technique-sunburst.component';
+import {TechniqueSunburstComponent} from './artifact-visualization/technique-sunburst/technique-sunburst.component';
+import {ArtifactDetailsComponent} from './artifact-management/artifact-details/artifact-details.component';
+import {MatDialogModule} from "@angular/material/dialog";
+import { ArtifactMapPopupComponent } from './artifact-map/artifact-map-popup/artifact-map-popup.component';
+import {createCustomElement} from "@angular/elements";
 
 @NgModule({
   declarations: [
@@ -35,7 +39,9 @@ import { TechniqueSunburstComponent } from './artifact-visualization/technique-s
     ArtifactImagePopupComponent,
     ArtifactMapComponent,
     TemporalBarChartComponent,
-    TechniqueSunburstComponent
+    TechniqueSunburstComponent,
+    ArtifactDetailsComponent,
+    ArtifactMapPopupComponent
   ],
   imports: [
     BrowserModule,
@@ -53,11 +59,17 @@ import { TechniqueSunburstComponent } from './artifact-visualization/technique-s
     MatFormFieldModule,
     MatInputModule,
     MatProgressSpinnerModule,
-    MatBottomSheetModule
+    MatBottomSheetModule,
+    MatDialogModule
   ],
-  entryComponents: [ArtifactImagePopupComponent],
+  entryComponents: [ArtifactImagePopupComponent, ArtifactDetailsComponent, ArtifactMapPopupComponent],
   providers: [D3Service],
   bootstrap: [AppComponent]
 })
 export class AppModule {
+  constructor(private injector: Injector) {
+    const PopupElement = createCustomElement(ArtifactMapPopupComponent, {injector});
+    // Register the custom element with the browser.
+    customElements.define('popup-element', PopupElement);
+  }
 }
