@@ -1,10 +1,12 @@
 spring:
   datasource:
-    url: jdbc:postgresql://127.0.0.1:5432/culherviz
+    url: jdbc:postgresql://0.0.0.0:5432/historymap
     username: postgres
     password: password
   resources:
-    static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/webapp/,classpath:/public/,file:D:/Dev/workspaces/culherviz/pictureStore
+    static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/webapp/,classpath:/public/,file:/home/brin/Dev/random/pictureStore
+
+
 
 
 logging:
