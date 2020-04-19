@@ -27,3 +27,4 @@ hs_err_pid*
 /domain/target/
 /persistence/target/
 /service/target/
+/frontend-ng/target/
