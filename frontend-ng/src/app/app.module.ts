@@ -23,7 +23,6 @@ import {ArtifactImagePopupComponent} from './artifact-management/artifact-image-
 import {MatBottomSheetModule} from "@angular/material/bottom-sheet";
 import {ArtifactMapComponent} from './artifact-map/artifact-map/artifact-map.component';
 import {TemporalBarChartComponent} from './artifact-visualization/temporal-bar-chart/temporal-bar-chart.component';
-import {D3Service} from "d3-ng2-service";
 import {TechniqueSunburstComponent} from './artifact-visualization/technique-sunburst/technique-sunburst.component';
 import {ArtifactDetailsComponent} from './artifact-management/artifact-details/artifact-details.component';
 import {MatDialogModule} from "@angular/material/dialog";
@@ -63,7 +62,7 @@ import {createCustomElement} from "@angular/elements";
     MatDialogModule
   ],
   entryComponents: [ArtifactImagePopupComponent, ArtifactDetailsComponent, ArtifactMapPopupComponent],
-  providers: [D3Service],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule {

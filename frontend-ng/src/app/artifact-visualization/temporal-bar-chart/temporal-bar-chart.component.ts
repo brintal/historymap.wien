@@ -1,5 +1,4 @@
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
-import {D3, D3Service} from "d3-ng2-service";
 import {ArtifactImageService} from "../../artifact-map/shared/artifact-image.service";
 import {ScaleBand, ScaleLogarithmic} from "d3-scale";
 import * as d3 from 'd3';
@@ -13,7 +12,6 @@ import {Artifact} from "../../shared/generated/domain";
 })
 export class TemporalBarChartComponent implements OnInit {
 
-  private d3: D3;
   private parentNativeElement: any;
   private artifactImagesService: ArtifactImageService;
 
@@ -24,8 +22,7 @@ export class TemporalBarChartComponent implements OnInit {
   @Input() getPeriod: [number, number];
   @Output() getPeriodChange = new EventEmitter<[number, number]>();
 
-  constructor(elementRef: ElementRef, d3Service: D3Service, artifactImagesService: ArtifactImageService) {
-    this.d3 = d3Service.getD3();
+  constructor(elementRef: ElementRef, artifactImagesService: ArtifactImageService) {
     this.parentNativeElement = elementRef.nativeElement;
     this.artifactImagesService = artifactImagesService;}
 

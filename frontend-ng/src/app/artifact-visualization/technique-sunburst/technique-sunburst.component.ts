@@ -1,7 +1,7 @@
-import {Component, ElementRef, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import Sunburst from 'sunburst-chart';
 import {HttpClient} from "@angular/common/http";
-import {D3, D3Service} from "d3-ng2-service";
+import * as d3 from 'd3';
 
 @Component({
   selector: 'app-technique-sunburst',
@@ -10,14 +10,11 @@ import {D3, D3Service} from "d3-ng2-service";
 })
 export class TechniqueSunburstComponent implements OnInit {
 
-  private d3: D3;
-
-  constructor(private http: HttpClient, d3Service: D3Service) {
-    this.d3 = d3Service.getD3();
+  constructor(private http: HttpClient) {
   }
 
   ngOnInit() {
-    const color = this.d3.scaleOrdinal(this.d3.schemePaired);
+    const color = d3.scaleOrdinal(d3.schemePaired);
 
     this.http.get("/api/getSunburstTechniqueData").subscribe(data => {
       Sunburst()
@@ -61,7 +58,6 @@ export class TechniqueSunburstComponent implements OnInit {
     // };
 
   }
-
 
 
 }
