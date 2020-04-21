@@ -17,7 +17,7 @@ import {ArtifactDetailsComponent} from "../artifact-details/artifact-details.com
 export class ArtifactTableComponent implements AfterViewInit, OnInit {
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
-  @ViewChild(MatTable, {static: false}) table: MatTable<Artifact>;
+  @ViewChild(MatTable) table: MatTable<Artifact>;
   dataSource: MatTableDataSource<Artifact>;
   initialized: boolean = false;
 

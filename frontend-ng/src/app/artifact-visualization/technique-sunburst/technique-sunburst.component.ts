@@ -14,16 +14,27 @@ export class TechniqueSunburstComponent implements OnInit {
   }
 
   ngOnInit() {
-    const color = d3.scaleOrdinal(d3.schemePaired);
+    const color = d3.scaleOrdinal(d3.schemeCategory10);
 
     this.http.get("/api/getSunburstTechniqueData").subscribe(data => {
       Sunburst()
         .data(data)
         .size('value')
-        .width('400')
-        .height('400')
+        .width(400)
+        .height(400)
         // .onNodeClick(node => console.log("node clicked "+ node.name + " "+node.value))
-        .color((d, parent) => color(parent ? parent.data.name : null))
+        // @ts-ignore
+        .color(obj => {
+          if (obj.name == 'Techniken') {
+            return '#303030';
+          }
+          if (obj.__dataNode.parent != null && obj.__dataNode.parent.data.name != 'Techniken') {
+            return d3.rgb(color(obj.__dataNode.parent.data.name)).brighter(1);
+          }
+          return color(obj.name);
+
+        })
+        // .color((d, parent) => color(parent ? parent.data.name : null))
         .tooltipContent((d, node) => `Size: <i>${node.value}</i>`)
         (document.getElementById('chart'));
     });

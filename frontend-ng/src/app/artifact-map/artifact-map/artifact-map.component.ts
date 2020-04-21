@@ -4,13 +4,11 @@ import * as L from 'leaflet';
 import {LatLng} from 'leaflet';
 import 'leaflet.markercluster';
 import {EndpointSettings} from "../../shared/endpoint-settings";
-import Point = L.Point;
 import {Artifact, Technique} from "../../shared/generated/domain";
-import {ArtifactDetailsComponent} from "../../artifact-management/artifact-details/artifact-details.component";
-import {MatBottomSheet} from "@angular/material/bottom-sheet";
-import {MatDialog} from "@angular/material/dialog";
-import { NgElement, WithProperties } from '@angular/elements';
+import {NgElement, WithProperties} from '@angular/elements';
 import {ArtifactMapPopupComponent} from "../artifact-map-popup/artifact-map-popup.component";
+import * as d3 from "d3";
+import Point = L.Point;
 
 
 @Component({
@@ -27,6 +25,15 @@ export class ArtifactMapComponent implements OnInit {
   private data: Artifact[];
 
   selectedPeriod: [number, number] = [0, 2000];
+  selectedOverlay = 'none';
+
+  backgroundLayer: L.TileLayer;
+  watercolorLayer: L.TileLayer;
+  huberMapLayer: L.TileLayer;
+  grimmMapLayer: L.TileLayer;
+  moerschnerMapLayer: L.TileLayer;
+  luftbild1938MapLayer: L.TileLayer;
+  luftbild1956MapLayer: L.TileLayer;
 
   constructor(artifactImagesService: ArtifactImageService) {
     this.artifactImagesService = artifactImagesService;
@@ -38,8 +45,13 @@ export class ArtifactMapComponent implements OnInit {
     this.map = L.map('mapid', {attributionControl: false});
     this.map.setView([48.208043, 16.368739], 13);
 
-    ArtifactMapComponent.createBackgroundLayer().addTo(this.map);
-    ArtifactMapComponent.createWatercolorLayer().addTo(this.map);
+    this.backgroundLayer = ArtifactMapComponent.createBackgroundLayer().addTo(this.map);
+    this.watercolorLayer = ArtifactMapComponent.createWatercolorLayer().addTo(this.map);
+    this.huberMapLayer = ArtifactMapComponent.createHuberMapLayer();
+    this.grimmMapLayer = ArtifactMapComponent.createGrimmMapLayer();
+    this.moerschnerMapLayer = ArtifactMapComponent.createMoerschnerMapLayer();
+    this.luftbild1938MapLayer = ArtifactMapComponent.createluftbild1938MapLayer();
+    this.luftbild1956MapLayer = ArtifactMapComponent.createluftbild1956MapLayer();
 
     this.loadDataToMap();
   }
@@ -95,10 +107,62 @@ export class ArtifactMapComponent implements OnInit {
   }
 
 
+  private static createluftbild1938MapLayer(): L.TileLayer {
+    return L.tileLayer('http://maps.wien.gv.at/wmts/lb1938/grau/google3857/{z}/{y}/{x}.jpeg', {
+      minZoom: 0,
+      maxZoom: 20,
+    // @ts-ignore
+      ext: 'png'
+    });
+  }
+
+  private static createluftbild1956MapLayer(): L.TileLayer {
+    return L.tileLayer('http://maps.wien.gv.at/wmts/lb1956/grau/google3857/{z}/{y}/{x}.jpeg', {
+      minZoom: 0,
+      maxZoom: 20,
+    // @ts-ignore
+      ext: 'png'
+    });
+  }
+
+  private static createMoerschnerMapLayer(): L.TileLayer {
+    return L.tileLayer('http://sammlung.woldan.oeaw.ac.at/geoserver/gwc/service/gmaps?layers=geonode:ac04462599_moerschner_wien_1825&zoom={z}&x={x}&y={y}&format=image/jpeg', {
+      subdomains: 'abcd',
+      minZoom: 0,
+      maxZoom: 20,
+    // @ts-ignore
+    //   ext: 'png'
+    });
+  }
+
+  private static createGrimmMapLayer(): L.TileLayer {
+    return L.tileLayer('http://sammlung.woldan.oeaw.ac.at/geoserver/gwc/service/gmaps?layers=geonode:ac04382777_grimm_wien_1806&zoom={z}&x={x}&y={y}&format=image/jpeg', {
+      subdomains: 'abcd',
+      minZoom: 0,
+      maxZoom: 20,
+    // @ts-ignore
+    //   ext: 'png'
+    });
+  }
+
+  private static createHuberMapLayer(): L.TileLayer {
+    return L.tileLayer('http://sammlung.woldan.oeaw.ac.at/geoserver/gwc/service/gmaps?layers=geonode:ac04408812_huber_wien_1778&zoom={z}&x={x}&y={y}&format=image/jpeg', {
+      subdomains: 'abcd',
+      minZoom: 0,
+      maxZoom: 20,
+    // @ts-ignore
+    //   ext: 'png'
+    });
+  }
+
   private static createBackgroundLayer(): L.TileLayer {
-    return L.tileLayer('https://{s}.tile.openstreetmap.se/hydda/full/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-      attribution: 'Tiles courtesy of <a href="http://openstreetmap.se/" target="_blank">OpenStreetMap Sweden</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    return L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}{r}.{ext}', {
+      attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      subdomains: 'abcd',
+      minZoom: 0,
+      maxZoom: 20,
+    // @ts-ignore
+      ext: 'png'
     });
   }
 
@@ -126,12 +190,16 @@ export class ArtifactMapComponent implements OnInit {
   }
 
   private static createDivIcon(artifact: Artifact): L.DivIcon {
+    var colorRange = Array.from(d3.schemeSpectral[11].entries()).map(value => value[1]);
+    // @ts-ignore
+    let color = d3.scaleLinear().range(colorRange).domain([1650, 1700, 1750, 1775, 1800, 1825, 1850, 1875, 1900, 1950, 1990]);
+    let yearColor = color(artifact.year);
     return new L.DivIcon({
       className: 'my-div-icon',
       iconAnchor: [12, 21],
       popupAnchor: [5, -17],
       html: `<span class='icon-div-badge'>&nbsp${this.getBadgeIconForTechnique(artifact.technique)}&nbsp</span>` +
-        `<img class='icon-div-image icon-div-image-${this.getRoundedYear(artifact.year)}' src='/pictureStore/${artifact.onbImageId}/iconWithoutBorder/${artifact.onbImageId}.jpg'/>`
+        `<img class='icon-div-image' style='border-color:${yearColor}' src='/pictureStore/${artifact.onbImageId}/iconWithoutBorder/${artifact.onbImageId}.jpg'/>`
 
     });
   }
@@ -186,5 +254,42 @@ export class ArtifactMapComponent implements OnInit {
     }
     return 'select_all';
 
+  }
+
+  removeAllOverlays() {
+    this.huberMapLayer.removeFrom(this.map);
+    this.grimmMapLayer.removeFrom(this.map);
+    this.moerschnerMapLayer.removeFrom(this.map);
+    this.luftbild1938MapLayer.removeFrom(this.map);
+    this.luftbild1956MapLayer.removeFrom(this.map);
+  }
+
+  onOverlayChange() {
+    this.removeAllOverlays();
+    switch (this.selectedOverlay) {
+      case 'huber': {
+        this.huberMapLayer.addTo(this.map);
+        break;
+      }
+      case 'grimm': {
+        this.grimmMapLayer.addTo(this.map);
+        break;
+      }
+      case 'moerschner': {
+        this.moerschnerMapLayer.addTo(this.map);
+        break;
+      }
+      case 'luftbild1938': {
+        this.luftbild1938MapLayer.addTo(this.map);
+        break;
+      }
+      case 'luftbild1956': {
+        this.luftbild1956MapLayer.addTo(this.map);
+        break;
+      }
+      default : {
+        break;
+      }
+    }
   }
 }

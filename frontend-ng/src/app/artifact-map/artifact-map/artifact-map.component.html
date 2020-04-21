@@ -3,6 +3,20 @@
     <div id="mapid"></div>
   </div>
   <div class="mapChildColumn">
+    <div class="overlaySelect">
+      <mat-form-field>
+        <mat-label>Map Overlay</mat-label>
+        <mat-select [(value)]="selectedOverlay" (selectionChange)="onOverlayChange()">
+          <mat-option value="none">None</mat-option>
+          <mat-option value="huber">Huber 1778</mat-option>
+          <mat-option value="grimm">Grimm 1806</mat-option>
+          <mat-option value="moerschner">Mörschner 1825</mat-option>
+          <mat-option value="luftbild1938">Luftbild 1938</mat-option>
+          <mat-option value="luftbild1956">Luftbild 1956</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <br/>
+    </div>
     <app-temporal-bar-chart [(getPeriod)]="selectedPeriod" (getPeriodChange)="onChangeSelectedPeriod($event)"></app-temporal-bar-chart>
     <app-technique-sunburst></app-technique-sunburst>
   </div>

@@ -18,6 +18,7 @@ export class TemporalBarChartComponent implements OnInit {
   private x: ScaleBand<string>;
   private y: ScaleLogarithmic<number, number>;
   private bandStep: number;
+  private yearCount: Map<number, number> = new Map();
 
   @Input() getPeriod: [number, number];
   @Output() getPeriodChange = new EventEmitter<[number, number]>();
@@ -33,9 +34,9 @@ export class TemporalBarChartComponent implements OnInit {
   }
 
   private createYearBuckets(data: Artifact[]): [number, number][] {
-    let yearCount: Map<number, number> = new Map();
+
     for (var i = 1650; i < 2000; i = i + 10) {
-      yearCount.set(i, 0);
+      this.yearCount.set(i, 0);
     }
     data.forEach(artifact => {
       let roundedYear: number;
@@ -45,13 +46,13 @@ export class TemporalBarChartComponent implements OnInit {
 
         roundedYear = artifact.year - (artifact.year % 10);
       }
-      yearCount.set(roundedYear, yearCount.get(roundedYear) + 1);
+      this.yearCount.set(roundedYear, this.yearCount.get(roundedYear) + 1);
     });
 
     let yearCountAr: [number, number][] = [];
     let year = 1650;
     for (var i = 0; year < 2000; i++) {
-      yearCountAr[i] = [year, yearCount.get(year) || 0];
+      yearCountAr[i] = [year, this.yearCount.get(year) || 0];
       year += 10;
     }
 
@@ -62,7 +63,14 @@ export class TemporalBarChartComponent implements OnInit {
     let margin = {top: 20, right: 30, bottom: 30, left: 40};
     let width = 500 - margin.left - margin.right;
     let height = 150 - margin.top - margin.bottom;
-
+    // const color = d3.scaleOrdinal(d3.schemeCategory10);
+    // console.log("asdf" +d3.schemeSpectral[34].entries());
+    // const color = d3.scaleOrdinal().range(d3.schemeSpectral[34]).domain(Array.from(this.yearCount.keys()).map(value => value.toString()));
+    // var colorRange = ['#C0D9CC', '#F6F6F4', '#925D60', '#B74F55', '#969943'];
+    var colorRange = Array.from(d3.schemeSpectral[11].entries()).map(value => value[1]);
+    console.log(Array.from(d3.schemeSpectral[5].entries()));
+    // @ts-ignore
+    let color = d3.scaleLinear().range(colorRange).domain([1650, 1700, 1750, 1775, 1800, 1825, 1850, 1875, 1900, 1950, 1990]);
     this.x = d3.scaleBand().rangeRound([0, width]).padding(0.1);
     this.y = d3.scaleLog().range([height, 0]).base(2);
 
@@ -97,12 +105,16 @@ export class TemporalBarChartComponent implements OnInit {
     chart.append("g")
       .attr("class", "y axis")
       .call(yAxis);
-
     chart.selectAll(".bar")
       .data(data)
       .enter().append("rect")
       .attr("class", "bar")
-      .attr("class", d=>`bar-${d[0].toString()}`)
+      .attr("fill",d => color(d[0].toString()))
+      // .attr("fill", d=> {
+      //   console.log(d[0]);
+      //   console.log(color(d[0].toString()));
+      //   return color(d[0].toString());})
+      // .attr("class", d=>`bar-${d[0].toString()}`)
       .attr("x", d => this.x(d[0].toString()))
       .attr("y", d => {
         if (d[1] != 0)

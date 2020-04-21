@@ -28,6 +28,7 @@ import {ArtifactDetailsComponent} from './artifact-management/artifact-details/a
 import {MatDialogModule} from "@angular/material/dialog";
 import { ArtifactMapPopupComponent } from './artifact-map/artifact-map-popup/artifact-map-popup.component';
 import {createCustomElement} from "@angular/elements";
+import {MatSelectModule} from "@angular/material/select";
 
 @NgModule({
   declarations: [
@@ -42,25 +43,26 @@ import {createCustomElement} from "@angular/elements";
     ArtifactDetailsComponent,
     ArtifactMapPopupComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    MatSliderModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatMenuModule,
-    MatIconModule,
-    MatTabsModule,
-    MatToolbarModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatProgressSpinnerModule,
-    MatBottomSheetModule,
-    MatDialogModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        HttpClientModule,
+        MatSliderModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatMenuModule,
+        MatIconModule,
+        MatTabsModule,
+        MatToolbarModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatProgressSpinnerModule,
+        MatBottomSheetModule,
+        MatDialogModule,
+        MatSelectModule
+    ],
   entryComponents: [ArtifactImagePopupComponent, ArtifactDetailsComponent, ArtifactMapPopupComponent],
   providers: [],
   bootstrap: [AppComponent]

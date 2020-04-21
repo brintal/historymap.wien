@@ -54,6 +54,10 @@
   width: calc(50% - 2px);
 }
 
+.overlaySelect {
+  margin-left: 10px;
+}
+
 @media screen and (max-width: 800px) {
   .mapChildColumn {
     width: 100%;
