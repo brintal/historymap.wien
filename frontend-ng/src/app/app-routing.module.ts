@@ -7,8 +7,7 @@ import {TechniqueSunburstComponent} from "./artifact-visualization/technique-sun
 const routes: Routes = [
   {path: '', redirectTo: '/map', pathMatch: 'full'},
   {path: 'list', component: ArtifactListComponent},
-  {path: 'map', component: ArtifactMapComponent},
-  {path: 'explore', component: TechniqueSunburstComponent}
+  {path: 'map', component: ArtifactMapComponent}
 ];
 
 @NgModule({

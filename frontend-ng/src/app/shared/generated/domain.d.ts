@@ -23,6 +23,12 @@ export interface Artifact extends AbstractEntity {
     location: Location;
 }
 
+export interface KeywordSummary {
+    text: string;
+    id: number;
+    size: number;
+}
+
 export interface Technique extends AbstractEntity {
     name: string;
     category: TechniqueCategory;

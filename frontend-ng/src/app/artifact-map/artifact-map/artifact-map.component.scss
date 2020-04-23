@@ -6,6 +6,26 @@
   height: 80vh;
 }
 
+#buttonRow {
+  position: absolute;
+  z-index: 1000000000000;
+  width: 100%;
+  margin-top:20px;
+}
+
+h3 {
+  margin-left: 10px;
+}
+
+#sidenavButton {
+  margin-right: 20px;
+  margin-left: 10px;
+}
+
+#closeButtonRow {
+  margin: 10px;
+}
+
 .leaflet-popup-content {
   width: auto !important;
 }
@@ -97,41 +117,32 @@
   box-shadow: 5px 5px 5px grey;
 }
 
-.icon-div-image-1650 { border-color: #EF11BD;}
-.icon-div-image-1660 { border-color: #EE12D4;}
-.icon-div-image-1670 { border-color: #ED13EA;}
-.icon-div-image-1680 { border-color: #D914EC;}
-.icon-div-image-1690 { border-color: #C215EB;}
-.icon-div-image-1700 { border-color: #AB16EA;}
-.icon-div-image-1710 { border-color: #9417E9;}
-.icon-div-image-1720 { border-color: #7E18E8;}
-.icon-div-image-1730 { border-color: #6819E7;}
-.icon-div-image-1740 { border-color: #531AE6;}
-.icon-div-image-1750 { border-color: #3E1BE5;}
-.icon-div-image-1760 { border-color: #2A1CE4;}
-.icon-div-image-1770 { border-color: #1D24E3;}
-.icon-div-image-1780 { border-color: #1D39E2;}
-.icon-div-image-1790 { border-color: #1E4EE1;}
-.icon-div-image-1800 { border-color: #1F63E0;}
-.icon-div-image-1810 { border-color: #2077DF;}
-.icon-div-image-1820 { border-color: #218BDE;}
-.icon-div-image-1830 { border-color: #229EDC;}
-.icon-div-image-1840 { border-color: #22B1DB;}
-.icon-div-image-1850 { border-color: #23C4DA;}
-.icon-div-image-1860 { border-color: #24D6D9;}
-.icon-div-image-1870 { border-color: #25D8C9;}
-.icon-div-image-1880 { border-color: #26D7B5;}
-.icon-div-image-1890 { border-color: #26D6A2;}
-.icon-div-image-1900 { border-color: #27D58F;}
-.icon-div-image-1910 { border-color: #28D47D;}
-.icon-div-image-1920 { border-color: #29D36B;}
-.icon-div-image-1930 { border-color: #29D259;}
-.icon-div-image-1940 { border-color: #2AD148;}
-.icon-div-image-1950 { border-color: #2BD037;}
-.icon-div-image-1960 { border-color: #31CF2B;}
-.icon-div-image-1970 { border-color: #42CE2C;}
-.icon-div-image-1980 { border-color: #54CD2D;}
-.icon-div-image-1990 { border-color: #64CC2D;}
+.example-headers-align .mat-expansion-panel-header-title,
+.example-headers-align .mat-expansion-panel-header-description {
+  flex-basis: 0;
+}
 
+.example-headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}
 
+.example-headers-align .mat-form-field + .mat-form-field {
+  margin-left: 8px;
+}
 
+.mat-expansion-panel-content {
+  overflow-y:auto !important;
+}
+
+.overlay-radio-group {
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
+}
+
+@media only screen and (max-width: 600px) {
+  .mat-sidenav {
+    width: 100%;
+  }
+}

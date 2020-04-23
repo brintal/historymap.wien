@@ -6,7 +6,7 @@
 
     <groupId>wien.historymap</groupId>
     <artifactId>parent</artifactId>
-    <version>1.0.39-SNAPSHOT</version>
+    <version>1.0.53-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>historymap.wien parent</name>
 

@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ArtifactImageService} from "../shared/artifact-image.service";
 import * as L from 'leaflet';
 import {LatLng} from 'leaflet';
@@ -9,6 +9,9 @@ import {NgElement, WithProperties} from '@angular/elements';
 import {ArtifactMapPopupComponent} from "../artifact-map-popup/artifact-map-popup.component";
 import * as d3 from "d3";
 import Point = L.Point;
+import {MatRipple} from "@angular/material/core";
+import Timeout = NodeJS.Timeout;
+import {Circle} from "leaflet";
 
 
 @Component({
@@ -19,10 +22,16 @@ import Point = L.Point;
 })
 export class ArtifactMapComponent implements OnInit {
 
+  opened: boolean;
+
+  @ViewChild('snav') snav;
+  @ViewChild(MatRipple) ripple: MatRipple;
+
   private artifactImagesService: ArtifactImageService;
   private map: L.Map;
   private markers: L.MarkerClusterGroup;
   private data: Artifact[];
+  private blinkingInterval: Timeout;
 
   selectedPeriod: [number, number] = [0, 2000];
   selectedOverlay = 'none';
@@ -34,6 +43,8 @@ export class ArtifactMapComponent implements OnInit {
   moerschnerMapLayer: L.TileLayer;
   luftbild1938MapLayer: L.TileLayer;
   luftbild1956MapLayer: L.TileLayer;
+  currentLocation: Circle;
+  followLocation = true;
 
   constructor(artifactImagesService: ArtifactImageService) {
     this.artifactImagesService = artifactImagesService;
@@ -42,6 +53,9 @@ export class ArtifactMapComponent implements OnInit {
   ngOnInit() {
     this.artifactImagesService.fetchAllArtifacts();
 
+    if (this.map != null) {
+      this.map.remove();
+    }
     this.map = L.map('mapid', {attributionControl: false});
     this.map.setView([48.208043, 16.368739], 13);
 
@@ -54,6 +68,55 @@ export class ArtifactMapComponent implements OnInit {
     this.luftbild1956MapLayer = ArtifactMapComponent.createluftbild1956MapLayer();
 
     this.loadDataToMap();
+    var self = this;
+    this.blinkingInterval = setInterval(function(){
+      self.ripple.launch({centered: true});
+      }, 1000);
+    setTimeout(function () {
+        self.snav.toggle();
+      }
+      , 1000);
+    setTimeout(function () {
+        self.snav.toggle();
+      }
+      , 2000);
+
+  }
+
+  private initLocation() {
+    this.map.locate({watch: true});
+    var self = this;
+    this.map.on('locationfound', event => {
+      if (self.currentLocation != null) {
+        self.currentLocation.removeFrom(self.map);
+      }
+      self.currentLocation = L.circle(event.latlng, event.accuracy, {color: "yellow"}).addTo(self.map);
+      if (self.followLocation) {
+        this.map.setView(event.latlng, 16);
+      }
+    })
+    this.map.on('dragstart', event => {
+      console.log("dragstart");
+      self.followLocation = false;
+    });
+  }
+
+  public toggleSidebar() {
+    clearInterval(this.blinkingInterval);
+    this.snav.toggle();
+    var self = this;
+    setTimeout(function () {
+        self.map.invalidateSize();
+      }
+      , 200);
+  }
+
+  public centerMyLocation() {
+    if (this.currentLocation == null) {
+      this.initLocation();
+    } else {
+      this.map.setView(this.currentLocation.getLatLng(), 16);
+    }
   }
 
 
@@ -77,7 +140,7 @@ export class ArtifactMapComponent implements OnInit {
   }
 
   private createMarker(artifact: Artifact): L.Layer {
-    let marker = L.marker([artifact.location.latitude, artifact.location.longitude], {icon: ArtifactMapComponent.createDefaultIcon()});
+    let marker = L.marker([artifact.location.latitude, artifact.location.longitude], {});
     marker.addEventListener("add", addEvent => marker.setIcon(ArtifactMapComponent.createDivIcon(artifact)));
     marker.bindPopup((layer: L.Layer) => this.createPopup(artifact));
     marker.on('click', event => {
@@ -207,19 +270,7 @@ export class ArtifactMapComponent implements OnInit {
   private createCustomIcon(iconBase64: string): L.Icon {
     return L.icon({
       iconUrl: "data:image/png;base64, " + iconBase64,
-      shadowUrl: '/assets/marker-shadow.png',
       iconSize: [30, 30],
-      shadowSize: [41, 41],
-      iconAnchor: [12, 41],
-      popupAnchor: [-170, -34]
-    });
-  }
-
-  private static createDefaultIcon(): L.Icon {
-    return L.icon({
-      iconUrl: '/assets/marker-icon.png',
-      shadowUrl: '/assets/marker-shadow.png',
-      iconSize: [25, 41],
       shadowSize: [41, 41],
       iconAnchor: [12, 41],
       popupAnchor: [-170, -34]

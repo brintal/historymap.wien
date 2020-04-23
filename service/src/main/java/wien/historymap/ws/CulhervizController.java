@@ -14,9 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 import wien.historymap.domain.Artifact;
 import wien.historymap.domain.Technique;
 import wien.historymap.domain.TechniqueCategory;
-import wien.historymap.dto.SimpleArtifact;
+import wien.historymap.dto.KeywordSummary;
 import wien.historymap.dto.SunburstDto;
 import wien.historymap.persistence.repo.ArtifactRepository;
+import wien.historymap.persistence.repo.KeywordRepository;
 import wien.historymap.persistence.repo.TechniqueCategoryRepository;
 
 import javax.imageio.ImageIO;
@@ -36,6 +37,9 @@ public class CulhervizController {
 
     @Autowired
     ArtifactRepository artifactRepository;
+
+    @Autowired
+    KeywordRepository keywordRepository;
 
     @Autowired
     TechniqueCategoryRepository techniqueCategoryRepository;
@@ -146,6 +150,12 @@ public class CulhervizController {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Transactional(readOnly = true)
+    @RequestMapping(value = "/getKeywordSummary", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<KeywordSummary> getKeywordSummary() {
+        return keywordRepository.findAllKeywordSummary();
     }
 
 }
