@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {ArtifactService} from "../shared/artifact.service";
 import {Artifact} from "../../shared/generated/domain";
 
 @Component({
@@ -11,19 +10,9 @@ export class ArtifactListComponent implements OnInit {
 
   artifacts: Artifact[] = [];
 
-  constructor(private artifactService: ArtifactService) {
+  constructor() {
   }
 
   ngOnInit() {
-    // this.getArtifacts();
   }
-
-  getArtifacts(): void {
-    this.artifactService.getArtifacts()
-      .subscribe(artifacts => artifacts.forEach((artifact) => {
-        console.log(artifact.onbImageId + ' ' + artifact.title);
-        })
-      );
-  }
-
 }

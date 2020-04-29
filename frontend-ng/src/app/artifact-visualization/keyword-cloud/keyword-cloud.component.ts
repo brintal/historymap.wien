@@ -1,8 +1,12 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import * as D3 from 'd3';
 import {HttpClient} from "@angular/common/http";
+import {ArtifactImageService} from "../../artifact-map/shared/artifact-image.service";
+import {Artifact, Keyword} from "../../shared/generated/domain";
 
 declare let d3: any;
+
+type KeywordSummary = { id: number, text: string, size: number, x: number, y: number, rotate: number };
 
 @Component({
   selector: 'app-keyword-cloud',
@@ -10,79 +14,132 @@ declare let d3: any;
   styleUrls: ['./keyword-cloud.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
+
 export class KeywordCloudComponent implements OnInit {
 
-  constructor(private http: HttpClient) { }
+  private filterId: number;
+  private selectedKeywordId: number;
+
+  constructor(private artifactImagesService: ArtifactImageService, private http: HttpClient) {
+  }
 
   ngOnInit(): void {
 
-    this.http.get("/api/getKeywordSummary").subscribe(data => {
+    let keywordMap: Map<string, number> = new Map<string, number>();
 
-      console.log(data);
+    let subscription = this.artifactImagesService.artifactData$.subscribe(data => {
+      console.log("starting transforming data");
+      let mappedData = this.mapData(data, keywordMap);
 
-
-      var cloud = d3.layout.cloud;
-
-      // @ts-ignore
-      data = data.filter(entry => entry.size > 10);
-
-
-      // var myScale = D3.scaleLinear()
-      //   .domain([1, data[0].size])
-      //   .range([10, 50]);
-
-      var myScale = D3.scaleLog()
+      let myScale = D3.scaleLog()
         .base(2)
-        .domain([10, data[0].size])
+        .domain([10, mappedData[0].size])
         .range([5, 50]);
 
-      var layout = cloud()
+      let layout = d3.layout.cloud()
         .size([500, 500])
-      // @ts-ignore
-        .words(data.map(function(d) {
-          return {text: d.text, size: myScale(d.size), id: d.id};
-        }))
+        .words(mappedData.map(keywordSummary => (<KeywordSummary>{
+          text: keywordSummary.text,
+          size: myScale(keywordSummary.size),
+          id: keywordSummary.id
+        })))
         .padding(5)
-        .rotate(function() { return ~~(Math.random() * 1) * 90; })
+        // .rotate(() => ~~(Math.random() * 1) * 90)
         .font("Impact")
-        .fontSize(function(d) { return d.size; })
+        .fontSize(keyword => keyword.size)
         .on("end", draw);
 
-      layout.start();
+      let self = this;
 
-      function draw(words) {
-        D3.select(".cloud")
-          .attr("width", layout.size()[0])
-          .attr("height", layout.size()[1])
-          .append("g")
-          .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
-          .selectAll("text")
-          .data(words)
-          .enter().append("text")
-          .style("font-size", function(d) {
-            // @ts-ignore
-            return d.size + "px"; })
-          .style("font-family", "Impact")
-          .style("fill", function(d, i) { return '#000'; })
-          .style("cursor", "pointer")
-          .attr("text-anchor", "middle")
-        // @ts-ignore
-          .attr("class", d => 'keyword'+d.id)
-          .attr("transform", function(d) {
-            // @ts-ignore
-            return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-          })
-            // @ts-ignore
-          .text(function(d) { return d.text; })
-          .on("click", d => {
-            D3.select(".currentSelectedKeyword").classed("currentSelectedKeyword", false);
-            // @ts-ignore
-            D3.select(".keyword"+d.id).classed("currentSelectedKeyword", true);
-            });
+      function draw(words: KeywordSummary[]) {
+        {
+          D3.select(".cloud")
+            .attr("width", layout.size()[0])
+            .attr("height", layout.size()[1])
+            .append("g")
+            .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
+            .selectAll("text")
+            .data(words)
+            .enter().append("text")
+            .style("font-size", value => value.size + "px")
+            .style("font-family", "Impact")
+            .style("fill", (d, i) => 'darkgray')
+            .style("cursor", "pointer")
+            .attr("text-anchor", "middle")
+            .attr("class", value => 'keyword' + value.id)
+            .attr("title", value => value.text)
+            .attr("transform", value => {
+              return "translate(" + [value.x, value.y] + ")rotate(" + value.rotate + ")";
+            })
+            .text(value => value.text)
+            .on("click", value => {
+              D3.select(".currentSelectedKeyword").classed("currentSelectedKeyword", false);
+              if (value.id != self.selectedKeywordId) {
+                D3.select(".keyword" + value.id).classed("currentSelectedKeyword", true);
+              }
+              self.addKeywordFilter(value.id);
+            })
+            .append("title")
+            .text(value => value.text);
+        }
       }
-
-
+      layout.start();
+      subscription.unsubscribe();
     });
+
+    this.artifactImagesService.clearFilterNotify$.subscribe(value => {
+      D3.select(".currentSelectedKeyword").classed("currentSelectedKeyword", false);
+    })
+  }
+
+  private addKeywordFilter(keywordId: number) {
+    console.log(keywordId);
+    console.log(this.selectedKeywordId);
+    if (this.selectedKeywordId == keywordId) {
+      this.artifactImagesService.removeFilter(this.filterId);
+      this.selectedKeywordId = null;
+      this.filterId = null;
+      return;
+    }
+    this.artifactImagesService.removeFilter(this.filterId);
+    this.filterId = this.artifactImagesService.addFilter(artifact => {
+      for (var keyword of artifact.keywords) {
+        if (keyword.id == keywordId) {
+          return true;
+        }
+      }
+      return false;
+    })
+    this.selectedKeywordId = keywordId;
+  }
+
+  private mapData(data: Artifact[], keywordMap: Map<string, number>): KeywordSummary[] {
+    data.forEach(artifact => {
+      for (var keyword of artifact.keywords) {
+        let keywordAsString = JSON.stringify(keyword);
+        if (keywordMap.has(keywordAsString)) {
+          keywordMap.set(keywordAsString, keywordMap.get(keywordAsString) + 1);
+        } else {
+          keywordMap.set(keywordAsString, 1);
+        }
+      }
+    });
+    let mappedData: KeywordSummary[] = Array.from(keywordMap, ([key, value]) => {
+      let keyword: Keyword = JSON.parse(key);
+      return <KeywordSummary>{id: keyword.id, text: keyword.value, size: value}
+    });
+    mappedData = mappedData
+      .filter(entry => entry.size > 5)
+      .sort((a, b) => {
+        if (a.size > b.size) {
+          return -1;
+        }
+        if (a.size < b.size) {
+          return 1;
+        }
+        return 0;
+      });
+    return mappedData;
   }
 }
 

@@ -37,6 +37,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {MAT_RIPPLE_GLOBAL_OPTIONS, MatRippleModule, RippleGlobalOptions} from "@angular/material/core";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatRadioModule} from "@angular/material/radio";
+import {MatCardModule} from "@angular/material/card";
 
 const globalRippleConfig: RippleGlobalOptions = {
   disabled: false
@@ -56,33 +57,34 @@ const globalRippleConfig: RippleGlobalOptions = {
     ArtifactMapPopupComponent,
     KeywordCloudComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    MatSliderModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatMenuModule,
-    MatIconModule,
-    MatTabsModule,
-    MatToolbarModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatProgressSpinnerModule,
-    MatBottomSheetModule,
-    MatDialogModule,
-    MatSelectModule,
-    MatSidenavModule,
-    MatCheckboxModule,
-    FormsModule,
-    MatButtonModule,
-    MatRippleModule,
-    MatExpansionModule,
-    MatRadioModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        HttpClientModule,
+        MatSliderModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatMenuModule,
+        MatIconModule,
+        MatTabsModule,
+        MatToolbarModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatProgressSpinnerModule,
+        MatBottomSheetModule,
+        MatDialogModule,
+        MatSelectModule,
+        MatSidenavModule,
+        MatCheckboxModule,
+        FormsModule,
+        MatButtonModule,
+        MatRippleModule,
+        MatExpansionModule,
+        MatRadioModule,
+        MatCardModule
+    ],
   entryComponents: [ArtifactImagePopupComponent, ArtifactDetailsComponent, ArtifactMapPopupComponent],
   providers: [{provide: MAT_RIPPLE_GLOBAL_OPTIONS, useValue: globalRippleConfig}
   ],

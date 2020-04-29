@@ -6,7 +6,10 @@
       <button #snavbutton mat-mini-fab color="accent"(click)="toggleSidebar();" style="float: right;">
         <mat-icon>arrow_forward</mat-icon>
       </button>
+      <button mat-raised-button color="primary" (click)="clearFilters();" style="float: left;">Clear Filters<mat-icon>delete</mat-icon></button>
     </div>
+    <br/>
+    <br/>
     <h3>Explore the collection</h3>
 
     <div class="example-headers-align">
@@ -52,8 +55,7 @@
             <mat-icon>bar_chart</mat-icon>
           </mat-panel-description>
         </mat-expansion-panel-header>
-        <app-temporal-bar-chart [(getPeriod)]="selectedPeriod"
-                                (getPeriodChange)="onChangeSelectedPeriod($event)"></app-temporal-bar-chart>
+        <app-temporal-bar-chart></app-temporal-bar-chart>
       </mat-expansion-panel>
       <mat-expansion-panel >
         <mat-expansion-panel-header>
@@ -104,7 +106,7 @@
   <mat-sidenav-content>
     <div id="buttonRow">
     <button #snavbutton matRipple id="sidenavButton" mat-fab (click)="toggleSidebar();" style="float: right;">
-      <mat-icon>visibility</mat-icon>
+      <mat-icon>tune</mat-icon>
     </button>
     <button #mylocationbutton id="mylocationbutton" mat-fab (click)="centerMyLocation();" style="float: right;">
       <mat-icon>my_location</mat-icon>

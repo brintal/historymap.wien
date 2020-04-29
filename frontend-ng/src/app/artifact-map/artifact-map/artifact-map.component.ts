@@ -1,4 +1,12 @@
-import {ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import {ArtifactImageService} from "../shared/artifact-image.service";
 import * as L from 'leaflet';
 import {LatLng} from 'leaflet';
@@ -20,18 +28,15 @@ import {Circle} from "leaflet";
   styleUrls: ['./artifact-map.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class ArtifactMapComponent implements OnInit {
+export class ArtifactMapComponent implements AfterViewInit {
 
   opened: boolean;
 
   @ViewChild('snav') snav;
-  @ViewChild(MatRipple) ripple: MatRipple;
 
-  private artifactImagesService: ArtifactImageService;
   private map: L.Map;
   private markers: L.MarkerClusterGroup;
   private data: Artifact[];
-  private blinkingInterval: Timeout;
 
   selectedPeriod: [number, number] = [0, 2000];
   selectedOverlay = 'none';
@@ -46,13 +51,10 @@ export class ArtifactMapComponent implements OnInit {
   currentLocation: Circle;
   followLocation = true;
 
-  constructor(artifactImagesService: ArtifactImageService) {
-    this.artifactImagesService = artifactImagesService;
+  constructor(private artifactImagesService: ArtifactImageService) {
   }
 
-  ngOnInit() {
-    this.artifactImagesService.fetchAllArtifacts();
-
+  ngAfterViewInit() {
     if (this.map != null) {
       this.map.remove();
     }
@@ -69,9 +71,6 @@ export class ArtifactMapComponent implements OnInit {
 
     this.loadDataToMap();
     var self = this;
-    this.blinkingInterval = setInterval(function(){
-      self.ripple.launch({centered: true});
-      }, 1000);
     setTimeout(function () {
         self.snav.toggle();
       }
@@ -80,6 +79,11 @@ export class ArtifactMapComponent implements OnInit {
         self.snav.toggle();
       }
       , 2000);
+
+    this.artifactImagesService.clearFilterNotify$.subscribe(value => {
+      this.selectedOverlay = 'none';
+      this.onOverlayChange();
+    })
 
   }
 
@@ -102,7 +106,6 @@ export class ArtifactMapComponent implements OnInit {
   }
 
   public toggleSidebar() {
-    clearInterval(this.blinkingInterval);
     this.snav.toggle();
     var self = this;
     setTimeout(function () {
@@ -123,6 +126,9 @@ export class ArtifactMapComponent implements OnInit {
   private loadDataToMap() {
     this.artifactImagesService.artifactData$.subscribe((data => {
       this.data = data;
+      if (this.markers) {
+        this.markers.clearLayers();
+      }
       this.createClusters(data);
     }));
   }
@@ -133,7 +139,7 @@ export class ArtifactMapComponent implements OnInit {
       removeOutsideVisibleBounds: true
     });
     data.forEach(artifact => {
-      if (artifact.year >= this.selectedPeriod[0] && artifact.year <= this.selectedPeriod[1])
+      // if (artifact.year >= this.selectedPeriod[0] && artifact.year <= this.selectedPeriod[1])
         this.markers.addLayer(this.createMarker(artifact))
     });
     this.map.addLayer(this.markers);
@@ -278,7 +284,6 @@ export class ArtifactMapComponent implements OnInit {
   }
 
   onChangeSelectedPeriod($event: Event) {
-    this.markers.clearLayers();
     this.loadDataToMap();
   }
 
@@ -342,5 +347,9 @@ export class ArtifactMapComponent implements OnInit {
         break;
       }
     }
+  }
+
+  clearFilters() {
+    this.artifactImagesService.clearFilters();
   }
 }

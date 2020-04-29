@@ -67,7 +67,7 @@ public class Artifact extends AbstractEntity {
     @JoinTable(name = "motif", catalog = "culherviz", schema = "public", joinColumns = @JoinColumn(name = "artifact_id", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "person_id", referencedColumnName = "id", nullable = false))
     private List<Person> motifs;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "assigned_keyword", catalog = "culherviz", schema = "public", joinColumns = @JoinColumn(name = "artifact_id", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "keyword_id", referencedColumnName = "id", nullable = false))
     private List<Keyword> keywords;
 

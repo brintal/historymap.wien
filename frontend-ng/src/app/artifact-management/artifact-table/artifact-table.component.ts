@@ -2,12 +2,12 @@ import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTable, MatTableDataSource} from '@angular/material/table';
-import {ArtifactService} from "../shared/artifact.service";
 import {MatBottomSheet} from "@angular/material/bottom-sheet";
 import {ArtifactImagePopupComponent} from "../artifact-image-popup/artifact-image-popup.component";
 import {Artifact} from "../../shared/generated/domain";
 import {MatDialog} from "@angular/material/dialog";
 import {ArtifactDetailsComponent} from "../artifact-details/artifact-details.component";
+import {ArtifactImageService} from "../../artifact-map/shared/artifact-image.service";
 
 @Component({
   selector: 'app-artifact-table',
@@ -24,13 +24,13 @@ export class ArtifactTableComponent implements AfterViewInit, OnInit {
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns = ['icon', 'id', 'title', 'year', 'longitude', 'latitude'];
 
-  constructor(private artifactService: ArtifactService,
+  constructor(private artifactImageService: ArtifactImageService,
               private _bottomSheet: MatBottomSheet,
               private _dialog: MatDialog) {
   }
 
   ngOnInit() {
-    this.artifactService.getArtifacts().subscribe(artifacts => {
+    this.artifactImageService.artifactData$.subscribe(artifacts => {
       this.dataSource = new MatTableDataSource<Artifact>(artifacts);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
