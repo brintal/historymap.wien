@@ -38,6 +38,7 @@ import {MAT_RIPPLE_GLOBAL_OPTIONS, MatRippleModule, RippleGlobalOptions} from "@
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatRadioModule} from "@angular/material/radio";
 import {MatCardModule} from "@angular/material/card";
+import { AuthorNetworkComponent } from './artifact-visualization/author-network/author-network.component';
 
 const globalRippleConfig: RippleGlobalOptions = {
   disabled: false
@@ -55,7 +56,8 @@ const globalRippleConfig: RippleGlobalOptions = {
     TechniqueSunburstComponent,
     ArtifactDetailsComponent,
     ArtifactMapPopupComponent,
-    KeywordCloudComponent
+    KeywordCloudComponent,
+    AuthorNetworkComponent
   ],
     imports: [
         BrowserModule,

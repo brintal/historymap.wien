@@ -7,13 +7,19 @@
   </div>
   <div class="rightColumn">
     <div>
-      <div class="crop">
+<!--      <div class="crop">-->
+        <div class="h_iframe">
         <a href='/pictureStore/{{data.onbImageId}}/{{data.onbImageId}}.jpg' target='_blank'>
-          <img src="/pictureStore/{{data.onbImageId}}/medium/{{data.onbImageId}}.jpg" alt="artifact medium image">
+          <img class="ratio" src="/pictureStore/{{data.onbImageId}}/{{data.onbImageId}}.jpg" alt="artifact medium image">
         </a>
-      </div>
+        </div>
+<!--      </div>-->
       <div class="streetview-div">
-        <iframe width="450" height="450" frameborder="0" [src]=getStreetviewUrl() allowfullscreen></iframe>
+        <div class="h_iframe">
+          <!-- a transparent image is preferable -->
+          <img class="ratio" src="http://placehold.it/16x9"/>
+          <iframe frameborder="0" [src]=getStreetviewUrl() allowfullscreen></iframe>
+        </div>
       </div>
     </div>
   </div>
