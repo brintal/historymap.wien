@@ -449,8 +449,8 @@ public class OnbParserImpl implements OnbParser {
 
             System.out.println(counter + ": processing artifact with Id " + artifact.getId());
 
-            artifact.setAuthors(parsePersonsOfArtifact(artifact.getId(), "Autor"));
-            artifact.setMotifs(parsePersonsOfArtifact(artifact.getId(), "Personen"));
+//            artifact.setAuthors(parsePersonsOfArtifact(artifact.getId(), "Autor"));
+//            artifact.setMotifs(parsePersonsOfArtifact(artifact.getId(), "Personen"));
 
             artifactRepository.save(artifact);
 

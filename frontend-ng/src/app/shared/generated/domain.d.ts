@@ -18,7 +18,6 @@ export interface Artifact extends AbstractEntity {
     locationLastUpdated: Date;
     technique: Technique;
     authors: Person[];
-    motifs: Person[];
     keywords: Keyword[];
     location: Location;
 }

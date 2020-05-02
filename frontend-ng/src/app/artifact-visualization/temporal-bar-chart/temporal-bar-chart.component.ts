@@ -73,7 +73,6 @@ export class TemporalBarChartComponent implements OnInit {
     // const color = d3.scaleOrdinal().range(d3.schemeSpectral[34]).domain(Array.from(this.yearCount.keys()).map(value => value.toString()));
     // var colorRange = ['#C0D9CC', '#F6F6F4', '#925D60', '#B74F55', '#969943'];
     var colorRange = Array.from(d3.schemeSpectral[11].entries()).map(value => value[1]);
-    console.log(Array.from(d3.schemeSpectral[5].entries()));
     // @ts-ignore
     let color = d3.scaleLinear().range(colorRange).domain([1650, 1700, 1750, 1775, 1800, 1825, 1850, 1875, 1900, 1950, 1990]);
     this.x = d3.scaleBand().rangeRound([0, this.width]).padding(0.1);

@@ -1,11 +1,13 @@
 package wien.historymap.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 
 @Data
@@ -59,17 +61,18 @@ public class Artifact extends AbstractEntity {
     @JoinColumn(name = "technique_id")
     private Technique technique;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "author", catalog = "culherviz", schema = "public", joinColumns = @JoinColumn(name = "artifact_id", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "person_id", referencedColumnName = "id", nullable = false))
-    private List<Person> authors;
+    private Set<Person> authors;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "motif", catalog = "culherviz", schema = "public", joinColumns = @JoinColumn(name = "artifact_id", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "person_id", referencedColumnName = "id", nullable = false))
     private List<Person> motifs;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "assigned_keyword", catalog = "culherviz", schema = "public", joinColumns = @JoinColumn(name = "artifact_id", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "keyword_id", referencedColumnName = "id", nullable = false))
-    private List<Keyword> keywords;
+    private Set<Keyword> keywords;
 
     @OneToOne
     @JoinColumn(name = "location_id")

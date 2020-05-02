@@ -1,5 +1,4 @@
 
-
 <mat-sidenav-container class="example-sidenav-container">
   <mat-sidenav #snav mode="side" fixedTopGap="56" position="end">
     <div id="closeButtonRow">
@@ -84,11 +83,23 @@
       <mat-expansion-panel >
         <mat-expansion-panel-header>
           <mat-panel-title>
-            Author Network
+            Authors
           </mat-panel-title>
           <mat-panel-description>
             &nbsp;
             <mat-icon>people</mat-icon>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <app-author-bubbles></app-author-bubbles>
+      </mat-expansion-panel>
+      <mat-expansion-panel >
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Author Network
+          </mat-panel-title>
+          <mat-panel-description>
+            &nbsp;
+            <mat-icon>device_hub</mat-icon>
           </mat-panel-description>
         </mat-expansion-panel-header>
         <app-author-network></app-author-network>

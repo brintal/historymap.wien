@@ -14,7 +14,6 @@ export class ArtifactImagePopupComponent implements OnInit {
   latitude: number;
 
   constructor(@Inject(MAT_BOTTOM_SHEET_DATA) public data: any, public sanitizer: DomSanitizer) {
-    console.log(data);
     this.imageId = data.imageId;
     this.longitude = data.longitude;
     this.latitude = data.latitude;

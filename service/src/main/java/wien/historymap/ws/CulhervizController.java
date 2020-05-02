@@ -1,9 +1,12 @@
 package wien.historymap.ws;
 
+import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,11 +31,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@Slf4j
 public class CulhervizController {
 
     @Autowired
@@ -44,23 +47,28 @@ public class CulhervizController {
     @Autowired
     TechniqueCategoryRepository techniqueCategoryRepository;
 
+    @Autowired
+    CulhervizController self;
+
     private static final String DOWNLOAD_PATH = "/pictureStore/";
     private static final String ICON_PATH = "D:/Dev/";
 
     private static final String REQUEST_MAPPING_GET_ARTIFACT_IMAGE = "/getArtifactImage";
 
+    @EventListener(ApplicationReadyEvent.class)
+    public void init(){
+        log.info("starting preloading artifacts");
+        List<Artifact> artifacts = artifactRepository.findAllByLocationIsNotNullAndYearIsNotNull();
+        log.info("preloaded "+artifacts.size()+" artifacts info cache");
+    }
+
     @RequestMapping("/artifacts")
-    @Cacheable("artifacts")
     public List<Artifact> artifacts() {
 
-
-        Date before = new Date();
-        System.out.println("get All Artifacts called");
+        log.info("get All Artifacts called");
         List<Artifact> toRet = artifactRepository.findAllByLocationIsNotNullAndYearIsNotNull();
 //        List<Artifact> toRet = artifactRepository.findAllByLocationIsNotNullAndTechniqueIsNotNullAndYearIsNotNull();
 //        List<SimpleArtifact> toRet = artifactRepository.findAllByLocationIsNotNullAndYearBetween(1970, 2000);
-        Date after = new Date();
-        System.out.println("get All Artifacts finished. took " + (after.getTime() - before.getTime()) + "seconds and found " + toRet.size() + " artifacts.");
 
         return toRet;
 

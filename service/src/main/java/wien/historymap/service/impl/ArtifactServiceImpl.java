@@ -9,8 +9,9 @@ import wien.historymap.domain.Keyword;
 import wien.historymap.persistence.repo.ArtifactRepository;
 import wien.historymap.persistence.repo.KeywordRepository;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class ArtifactServiceImpl implements ArtifactService {
@@ -27,7 +28,7 @@ public class ArtifactServiceImpl implements ArtifactService {
     public void updateKeywordsForArtifact(Integer id, List<String> keywords) {
         Artifact artifact = artifactRepository.findById(id).get();
 
-        List<Keyword> keywordList = new ArrayList<>();
+        Set<Keyword> keywordList = new HashSet<>();
 
         for (String keyword : keywords) {
             keywordList.add(keywordRepository.findByValue(keyword));

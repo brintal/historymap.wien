@@ -1,15 +1,7 @@
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-  ViewEncapsulation
-} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ArtifactImageService} from "../shared/artifact-image.service";
 import * as L from 'leaflet';
-import {LatLng} from 'leaflet';
+import {Circle, LatLng} from 'leaflet';
 import 'leaflet.markercluster';
 import {EndpointSettings} from "../../shared/endpoint-settings";
 import {Artifact, Technique} from "../../shared/generated/domain";
@@ -17,9 +9,6 @@ import {NgElement, WithProperties} from '@angular/elements';
 import {ArtifactMapPopupComponent} from "../artifact-map-popup/artifact-map-popup.component";
 import * as d3 from "d3";
 import Point = L.Point;
-import {MatRipple} from "@angular/material/core";
-import Timeout = NodeJS.Timeout;
-import {Circle} from "leaflet";
 
 
 @Component({
@@ -100,7 +89,6 @@ export class ArtifactMapComponent implements AfterViewInit {
       }
     })
     this.map.on('dragstart', event => {
-      console.log("dragstart");
       self.followLocation = false;
     });
   }
@@ -140,7 +128,7 @@ export class ArtifactMapComponent implements AfterViewInit {
     });
     data.forEach(artifact => {
       // if (artifact.year >= this.selectedPeriod[0] && artifact.year <= this.selectedPeriod[1])
-        this.markers.addLayer(this.createMarker(artifact))
+      this.markers.addLayer(this.createMarker(artifact))
     });
     this.map.addLayer(this.markers);
   }
@@ -180,7 +168,7 @@ export class ArtifactMapComponent implements AfterViewInit {
     return L.tileLayer('http://maps.wien.gv.at/wmts/lb1938/grau/google3857/{z}/{y}/{x}.jpeg', {
       minZoom: 0,
       maxZoom: 20,
-    // @ts-ignore
+      // @ts-ignore
       ext: 'png'
     });
   }
@@ -189,7 +177,7 @@ export class ArtifactMapComponent implements AfterViewInit {
     return L.tileLayer('http://maps.wien.gv.at/wmts/lb1956/grau/google3857/{z}/{y}/{x}.jpeg', {
       minZoom: 0,
       maxZoom: 20,
-    // @ts-ignore
+      // @ts-ignore
       ext: 'png'
     });
   }
@@ -199,8 +187,8 @@ export class ArtifactMapComponent implements AfterViewInit {
       subdomains: 'abcd',
       minZoom: 0,
       maxZoom: 20,
-    // @ts-ignore
-    //   ext: 'png'
+      // @ts-ignore
+      //   ext: 'png'
     });
   }
 
@@ -209,8 +197,8 @@ export class ArtifactMapComponent implements AfterViewInit {
       subdomains: 'abcd',
       minZoom: 0,
       maxZoom: 20,
-    // @ts-ignore
-    //   ext: 'png'
+      // @ts-ignore
+      //   ext: 'png'
     });
   }
 
@@ -219,8 +207,8 @@ export class ArtifactMapComponent implements AfterViewInit {
       subdomains: 'abcd',
       minZoom: 0,
       maxZoom: 20,
-    // @ts-ignore
-    //   ext: 'png'
+      // @ts-ignore
+      //   ext: 'png'
     });
   }
 
@@ -230,7 +218,7 @@ export class ArtifactMapComponent implements AfterViewInit {
       subdomains: 'abcd',
       minZoom: 0,
       maxZoom: 20,
-    // @ts-ignore
+      // @ts-ignore
       ext: 'png'
     });
   }

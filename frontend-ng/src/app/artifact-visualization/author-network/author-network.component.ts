@@ -54,7 +54,6 @@ export class AuthorNetworkComponent implements OnInit {
 
 
   ngOnInit() {
-    console.log('D3.js version:', d3['version']);
 
     const svg = d3.select(".network");
     const width = +svg.attr('width');
@@ -119,9 +118,6 @@ export class AuthorNetworkComponent implements OnInit {
         }
       }
 
-      console.log(authorMap);
-      console.log(linkMap);
-
       const nodes: AuthorNode[] = Array.from(authorMap.values()).map(author => {
         return {
           id: author.id,
@@ -153,7 +149,6 @@ export class AuthorNetworkComponent implements OnInit {
         // @ts-ignore
         .attr('fill', "#ff5722")
         .on('click', author => {
-          console.log(author.id);
           d3.select("#author" + this.selectedAuthorId).classed("currentSelectedAuthor", false);
           if (author.id != this.selectedAuthorId) {
             d3.select("#author" + author.id).classed("currentSelectedAuthor", true);
@@ -165,7 +160,6 @@ export class AuthorNetworkComponent implements OnInit {
             .filter((x:any) => x.source.id == author.id || x.target.id == author.id)
             .map((x:any) => x.source.id == author.id ? x.target.id : x.source.id);
           for(var y of connectedNodeIds) {
-            console.log(y);
             d3.select("#author"+y)
               .classed("mouseovernodegroup", true);
           }

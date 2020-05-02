@@ -21,7 +21,6 @@ export class ArtifactImageService {
   private currentData: Artifact[];
   private filterIdCounter: number = 0;
 
-
   constructor(private http: HttpClient) {
     this.fetchAllArtifacts();
   }
@@ -32,8 +31,8 @@ export class ArtifactImageService {
 
   public fetchAllArtifacts() {
     return this.http.get<Artifact[]>(EndpointSettings.API_OPERATION_ALL_ARTIFACTS)
-      .subscribe(artifact => {
-        this.currentData = artifact;
+      .subscribe(artifacts => {
+        this.currentData = artifacts;
         this.publish();
       });
   }

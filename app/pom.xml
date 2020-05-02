@@ -5,7 +5,7 @@
     <parent>
         <artifactId>parent</artifactId>
         <groupId>wien.historymap</groupId>
-        <version>1.0.64-SNAPSHOT</version>
+        <version>1.0.75-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>app</artifactId>
@@ -14,7 +14,7 @@
         <dependency>
             <groupId>wien.historymap</groupId>
             <artifactId>service</artifactId>
-            <version>1.0.64-SNAPSHOT</version>
+            <version>1.0.75-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

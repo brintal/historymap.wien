@@ -28,7 +28,6 @@ export class KeywordCloudComponent implements OnInit {
     let keywordMap: Map<string, number> = new Map<string, number>();
 
     let subscription = this.artifactImagesService.artifactData$.subscribe(data => {
-      console.log("starting transforming data");
       let mappedData = this.mapData(data, keywordMap);
 
       let myScale = D3.scaleLog()
@@ -93,8 +92,6 @@ export class KeywordCloudComponent implements OnInit {
   }
 
   private addKeywordFilter(keywordId: number) {
-    console.log(keywordId);
-    console.log(this.selectedKeywordId);
     if (this.selectedKeywordId == keywordId) {
       this.artifactImagesService.removeFilter(this.filterId);
       this.selectedKeywordId = null;

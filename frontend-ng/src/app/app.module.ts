@@ -39,6 +39,8 @@ import {MatExpansionModule} from "@angular/material/expansion";
 import {MatRadioModule} from "@angular/material/radio";
 import {MatCardModule} from "@angular/material/card";
 import { AuthorNetworkComponent } from './artifact-visualization/author-network/author-network.component';
+import { ImagePreloaderComponent } from './artifact-management/image-preloader/image-preloader.component';
+import { AuthorBubblesComponent } from './artifact-visualization/author-bubbles/author-bubbles.component';
 
 const globalRippleConfig: RippleGlobalOptions = {
   disabled: false
@@ -57,7 +59,9 @@ const globalRippleConfig: RippleGlobalOptions = {
     ArtifactDetailsComponent,
     ArtifactMapPopupComponent,
     KeywordCloudComponent,
-    AuthorNetworkComponent
+    AuthorNetworkComponent,
+    ImagePreloaderComponent,
+    AuthorBubblesComponent
   ],
     imports: [
         BrowserModule,
