@@ -1,4 +1,4 @@
-<div id="description">
+<div *ngIf="showDescription" id="description">
 <p>This chart shows the temporal distribution of the artifacts. Each bar represents a decade. The longer the bar, the more artifacts exist for this decade. The color of the bar corresponds with the icon-border-color on the map. Select certain time periods by clicking and dragging directly on the graph.</p>
 </div>
-<svg class="chart"></svg>
+<svg [attr.id]="chartId" ></svg>

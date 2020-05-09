@@ -1,16 +1,38 @@
 /*agm-map {*/
 /*height: 600px;*/
 /*}*/
-
-#mapid {
+//.sidenav-container {
+//  height: 100vh;
+//  box-sizing: border-box;
+//}
+//
+#mapHolder {
   height: 80vh;
+  box-sizing: border-box;
+}
+#mapid {
+  height: 100%;
+  //box-sizing: border-box;
+}
+#bottomTemporalChart {
+  border-radius: 0px 10px 0px 0px;
+  position: absolute;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, .6);
+  z-index: 9999999999999999999999999999;
 }
 
 #buttonRow {
+  padding-left: 50px;
   position: absolute;
   z-index: 999;
   width: 100%;
+  box-sizing: border-box;
   margin-top:20px;
+}
+.mapButton {
+  //margin-top:-20px!important;
+  float: right;
 }
 
 h3 {

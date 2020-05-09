@@ -19,7 +19,7 @@ interface Bubble {
 export class AuthorBubblesComponent implements OnInit {
 
 
-  private filterId: number;
+  private filterId: string;
   private selectedAuthorId: number;
 
   constructor(private artifactImagesService: ArtifactImageService) {
@@ -44,8 +44,6 @@ export class AuthorBubblesComponent implements OnInit {
           }
         }
       }
-
-      console.log(authorMap.size);
 
       let data: Bubble[] = [];
 
@@ -102,7 +100,6 @@ export class AuthorBubblesComponent implements OnInit {
       // rootLayout.sum(d => myScale(d.value));
       rootLayout.sum(d => d.value);
 
-      console.log(rootLayout);
 
       var pack =
         d3.pack()
@@ -110,7 +107,6 @@ export class AuthorBubblesComponent implements OnInit {
           .padding(3)(rootLayout);
 
       var nodes = pack.leaves();
-      console.log(nodes);
 
       const leaf = svg.selectAll("g")
         .data(nodes)
@@ -150,11 +146,13 @@ export class AuthorBubblesComponent implements OnInit {
       leaf
         .style("cursor", "pointer")
         .on("click", (d: any) => {
-          this.artifactImagesService.removeFilter(this.filterId);
           d3.select("#bubble" + this.selectedAuthorId).classed("currentSelectedAuthor", false);
           if (this.selectedAuthorId == d.data.id) {
+          this.artifactImagesService.removeFilterAndPublish(this.filterId);
             this.selectedAuthorId = null;
             return;
+          } else {
+            this.artifactImagesService.removeFilter(this.filterId);
           }
           this.filterId = this.artifactImagesService.addFilter(artifact => {
             if (d.data.id == -1) { // "other" selected

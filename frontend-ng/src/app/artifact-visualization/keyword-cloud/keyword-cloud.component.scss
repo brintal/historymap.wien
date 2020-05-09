@@ -3,6 +3,16 @@
   text-decoration: underline;
 }
 
+.unavailableKeyword {
+  fill: rgba(113,113,113,0.44) !important;
+  cursor: auto !important;
+  pointer-events: none;
+}
+
+.keywordElement {
+  cursor: pointer;
+}
+
 #description {
   display: block;
   width: 450px;

@@ -46,7 +46,7 @@ interface AuthorLink {
 })
 export class AuthorNetworkComponent implements OnInit {
 
-  private filterId: number;
+  private filterId: string;
   private selectedAuthorId: number;
 
   constructor(private artifactImagesService: ArtifactImageService) {
@@ -243,7 +243,7 @@ export class AuthorNetworkComponent implements OnInit {
 
   private addAuthorFilter(authorId: number) {
     if (this.selectedAuthorId == authorId) {
-      this.artifactImagesService.removeFilter(this.filterId);
+      this.artifactImagesService.removeFilterAndPublish(this.filterId);
       this.selectedAuthorId = null;
       this.filterId = null;
       return;

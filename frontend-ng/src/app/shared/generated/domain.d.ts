@@ -23,9 +23,9 @@ export interface Artifact extends AbstractEntity {
 }
 
 export interface KeywordSummary {
-    text: string;
     id: number;
     size: number;
+    text: string;
 }
 
 export interface Technique extends AbstractEntity {

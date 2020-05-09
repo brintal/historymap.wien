@@ -21,7 +21,7 @@ type SunburstDto = { name: string, value: number; children: SunburstDto[]; id: n
 })
 export class TechniqueSunburstComponent implements OnInit {
 
-  private filterId: number;
+  private filterId: string;
   private currentNodeId: number;
 
   constructor(private http: HttpClient, private artifactImagesService: ArtifactImageService) {

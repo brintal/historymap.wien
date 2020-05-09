@@ -1,5 +1,5 @@
 
-<mat-sidenav-container class="example-sidenav-container">
+<mat-sidenav-container class="sidenav-container">
   <mat-sidenav #snav mode="side" fixedTopGap="56" position="end">
     <div id="closeButtonRow">
       <button #snavbutton mat-mini-fab color="accent"(click)="toggleSidebar();" style="float: right;">
@@ -54,7 +54,7 @@
             <mat-icon>bar_chart</mat-icon>
           </mat-panel-description>
         </mat-expansion-panel-header>
-        <app-temporal-bar-chart></app-temporal-bar-chart>
+        <app-temporal-bar-chart chartId="sidebarTempChart"></app-temporal-bar-chart>
       </mat-expansion-panel>
       <mat-expansion-panel >
         <mat-expansion-panel-header>
@@ -117,13 +117,17 @@
 
   <mat-sidenav-content>
     <div id="buttonRow">
-    <button #snavbutton matRipple id="sidenavButton" mat-fab (click)="toggleSidebar();" style="float: right;">
+    <button #snavbutton matRipple id="sidenavButton" mat-fab (click)="toggleSidebar();" class="mapButton">
       <mat-icon>tune</mat-icon>
     </button>
-    <button #mylocationbutton id="mylocationbutton" mat-fab (click)="centerMyLocation();" style="float: right;">
+    <button #mylocationbutton id="mylocationbutton" mat-fab (click)="centerMyLocation();" class="mapButton">
       <mat-icon>my_location</mat-icon>
     </button>
+    <app-filter-overview></app-filter-overview>
     </div>
-   <div id="mapid"></div>
+    <div id="mapHolder">
+        <div id="mapid"></div>
+        <app-temporal-bar-chart id="bottomTemporalChart" [showDescription]="false" chartId="bottomTempChart"></app-temporal-bar-chart>
+    </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

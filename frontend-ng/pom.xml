@@ -5,7 +5,7 @@
   <parent>
     <artifactId>parent</artifactId>
     <groupId>wien.historymap</groupId>
-    <version>1.0.75-SNAPSHOT</version>
+    <version>1.0.76-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -15,7 +15,7 @@
     <dependency>
       <groupId>wien.historymap</groupId>
       <artifactId>domain</artifactId>
-      <version>1.0.75-SNAPSHOT</version>
+      <version>1.0.76-SNAPSHOT</version>
     </dependency>
   </dependencies>
 
