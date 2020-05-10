@@ -47,12 +47,12 @@ export class TemporalBarChartComponent implements OnInit {
       subscription.unsubscribe();
     });
 
-    this.artifactImagesService.filters$.subscribe(filters => {
+    this.artifactImagesService.filters$.subscribe(filterChangeEvent => {
       let filteredData: Artifact[] = [];
       this.data.forEach(artifact => {
         filteredData.push(artifact);
       })
-      for(var filter of filters) {
+      for(var filter of filterChangeEvent.filters) {
         if (filter.id == this.filterId) continue;
         filteredData = filteredData.filter(filter.filterFunction);
       }

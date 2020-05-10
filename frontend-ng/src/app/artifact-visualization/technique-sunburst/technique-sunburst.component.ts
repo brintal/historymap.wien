@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import Sunburst from 'sunburst-chart';
+import Sunburst, {SunburstChartInstance} from 'sunburst-chart';
 import {HttpClient} from "@angular/common/http";
 import * as d3 from 'd3';
 import {ArtifactImageService} from "../../artifact-map/shared/artifact-image.service";
@@ -21,8 +21,12 @@ type SunburstDto = { name: string, value: number; children: SunburstDto[]; id: n
 })
 export class TechniqueSunburstComponent implements OnInit {
 
-  private filterId: string;
+  private filterId: string = "TECHNIQUE_SUNBURST_FILTER";
   private currentNodeId: number;
+  private currentSelectedNode;
+  private data: Artifact[];
+  private graph: SunburstChartInstance;
+  private colorMap: Map<string, any>;
 
   constructor(private http: HttpClient, private artifactImagesService: ArtifactImageService) {
   }
@@ -40,45 +44,113 @@ export class TechniqueSunburstComponent implements OnInit {
 
 
     let subscription = this.artifactImagesService.artifactData$.subscribe(data => {
-      let mappedData = this.mapData(data);
-      const color = d3.scaleOrdinal(d3.schemeCategory10);
-
-      let graph = Sunburst()
-        .data(mappedData)
-        .size('value')
-        .width(400)
-        .height(400)
-        .onClick(node => {
-          // @ts-ignore
-          this.onClick(node);
-          graph.focusOnNode(node);})
-        // @ts-ignore
-        .color(obj => {
-          if (obj.name == 'Techniken') {
-            return '#303030';
-          }
-          if (obj.__dataNode.parent != null && obj.__dataNode.parent.data.name != 'Techniken') {
-            return d3.rgb(color(obj.__dataNode.parent.data.name)).brighter(1);
-          }
-          return color(obj.name);
-
-        })
-        .tooltipTitle(node => node.name)
-        // .color((d, parent) => color(parent ? parent.data.name : null))
-        .tooltipContent((d, node) => `Size: <i>${node.value}</i>`)
-        (document.getElementById('chart'));
+      this.data = data;
+      let graph = this.initSunburstGraph(data);
       subscription.unsubscribe();
 
-      this.artifactImagesService.clearFilterNotify$.subscribe(value => {
-        graph.focusOnNode(graph.data());
-      });
+      // this.artifactImagesService.clearFilterNotify$.subscribe(value => {
+      //   this.initSunburstGraph(this.data)
+      //   graph.focusOnNode(graph.data());
+      // });
+    });
+
+    this.artifactImagesService.filters$.subscribe(filterChangeEvent => {
+
+      if (filterChangeEvent.triggerFilterId != null && filterChangeEvent.triggerFilterId == this.filterId) return;
+      let filteredData: Artifact[] = [];
+      this.data.forEach(artifact => {
+        filteredData.push(artifact);
+      })
+      for(var filter of filterChangeEvent.filters) {
+        filteredData = filteredData.filter(filter.filterFunction);
+      }
+      this.initSunburstGraph(filteredData);
+
     });
   }
 
+  private initColors(root: SunburstDto) {
+    this.colorMap = new Map<string, any>();
+    const color = d3.scaleOrdinal(d3.schemeCategory10);
+    for (var child of root.children) {
+      this.colorMap.set(child.name, color(child.name));
+    }
+  }
+
+
+  private initSunburstGraph(data: Artifact[]) {
+    d3.select("#chart").selectAll("*").remove();
+    d3.selectAll(".sunburst-tooltip").remove();
+    let mappedData = this.mapData(data);
+
+    if (this.colorMap == null) {
+      this.initColors(mappedData);
+    }
+
+    this.graph = Sunburst()
+      .data(mappedData)
+      .size('value')
+      .width(400)
+      .height(400)
+      .onClick(node => {
+        // @ts-ignore
+        this.onClick(node);
+        this.graph.focusOnNode(node);
+      })
+      // @ts-ignore
+      .color(obj => {
+        if (obj.name == 'Techniken') {
+          return '#303030';
+        }
+        if (obj.__dataNode.parent != null && obj.__dataNode.parent.data.name != 'Techniken') {
+          return d3.rgb(this.colorMap.get(obj.__dataNode.parent.data.name)).brighter(1);
+        }
+        return this.colorMap.get(obj.name);
+
+      })
+      .tooltipTitle(node => node.name)
+      // .color((d, parent) => color(parent ? parent.data.name : null))
+      .tooltipContent((d, node) => `Size: <i>${node.value}</i>`)
+      (document.getElementById('chart'));
+
+    if(this.currentNodeId != null) {
+      // @ts-ignore
+      let nodeToFocus = this.findNodeWithId(this.currentNodeId, this.graph.data())
+      if (nodeToFocus != null ){
+        this.graph.focusOnNode(nodeToFocus);
+      }
+    }
+  }
+
+  private findNodeWithId(nodeIdToFind: number,  currentNode: SunburstDto): SunburstDto {
+
+    if (currentNode.id == nodeIdToFind) {
+      return currentNode;
+    }
+    if (currentNode.children == null || currentNode.children.length == 0) {
+      return null;
+    }
+
+    let foundNode: SunburstDto;
+    for (var child of currentNode.children) {
+      foundNode = this.findNodeWithId(nodeIdToFind, child);
+      if (foundNode != null) {
+        return foundNode;
+      }
+    }
+    return null;
+  }
 
   private onClick(node: SunburstDto) {
-    this.artifactImagesService.removeFilter(this.filterId);
-    this.filterId = this.artifactImagesService.addFilter(artifact => {
+    this.currentNodeId = node ? node.id : 0;
+    if (node == null) return; //no data. no need to add filter
+    if (node.id == 0) { //node id is root element Techniken. Clicking on it means mother element is selected and no filters should be applied anymore.
+      this.artifactImagesService.removeFilterAndPublish(this.filterId);
+      return;
+    }
+    this.filterId = this.artifactImagesService.addFilterById(this.filterId,
+        `Technique: ${node.name}`,
+        artifact => {
       if (node == null || node.type == null || node.type == SunburstDtoType.TOPLEVEL) {
         return true;
       }
@@ -90,7 +162,13 @@ export class TechniqueSunburstComponent implements OnInit {
       } else {
         return artifact.technique != null && artifact.technique.id == node.id;
       }
-    })
+    },
+      () => {
+      this.currentSelectedNode = null;
+      this.currentNodeId = null;
+      this.initSunburstGraph(this.data);
+      this.graph.focusOnNode(this.graph.data());
+      })
   }
 
   private readonly NOT_DEFINED_QUALIFIER = 'not defined';

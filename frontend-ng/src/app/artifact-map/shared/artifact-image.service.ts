@@ -3,7 +3,12 @@ import {Observable, ReplaySubject, Subject} from "rxjs";
 import {EndpointSettings} from "../../shared/endpoint-settings";
 import {HttpClient} from "@angular/common/http";
 import {Artifact} from "../../shared/generated/domain";
-import {ClearFilterCallbackFunction, FilterDefinition, FilterFunction} from "../../shared/filterDefinition";
+import {
+  ClearFilterCallbackFunction,
+  FilterChangeEvent,
+  FilterDefinition,
+  FilterFunction
+} from "../../shared/filterDefinition";
 
 
 @Injectable({
@@ -11,8 +16,8 @@ import {ClearFilterCallbackFunction, FilterDefinition, FilterFunction} from "../
 })
 export class ArtifactImageService {
 
-  private filtersSubject = new Subject<FilterDefinition[]>();
-  public filters$: Observable<FilterDefinition[]> = this.filtersSubject.asObservable();
+  private filtersSubject = new Subject<FilterChangeEvent>();
+  public filters$: Observable<FilterChangeEvent> = this.filtersSubject.asObservable();
   private filterDefinitions: Map<string, FilterDefinition> = new Map<string, FilterDefinition>();
 
   private artifactDataSubject = new ReplaySubject<Artifact[]>();
@@ -36,11 +41,11 @@ export class ArtifactImageService {
     return this.http.get<Artifact[]>(EndpointSettings.API_OPERATION_ALL_ARTIFACTS)
       .subscribe(artifacts => {
         this.currentData = artifacts;
-        this.publish();
+        this.publish(null);
       });
   }
 
-  private publish() {
+  private publish(triggerFilterId: string) {
     let filteredData = [];
     this.currentData.forEach(artifact => {
       filteredData.push(artifact);
@@ -50,7 +55,12 @@ export class ArtifactImageService {
     }
     this.artifactDataSubject.next(filteredData);
 
-    this.filtersSubject.next(Array.from(this.filterDefinitions.values()));
+    let filterChangeEvent: FilterChangeEvent = {
+      triggerFilterId: triggerFilterId,
+      filters:Array.from(this.filterDefinitions.values())
+    };
+
+    this.filtersSubject.next(filterChangeEvent);
   }
 
   public addFilter(callbackfn: (value: Artifact) => boolean): string {
@@ -68,7 +78,7 @@ export class ArtifactImageService {
       clearFilterCallback: clearFilterClb
     });
 
-    this.publish();
+    this.publish(filterId);
     return filterId;
   }
 
@@ -87,8 +97,9 @@ export class ArtifactImageService {
   }
 
   public removeFilterAndPublish(filterId: string) {
+    if (!this.filterDefinitions.has(filterId)) return;
     this.removeFilter(filterId);
-    this.publish();
+    this.publish(null);
   }
 
   public clearFilters() {
@@ -96,6 +107,6 @@ export class ArtifactImageService {
     this.filterDefinitions.forEach(filterDefinition => filterDefinition.clearFilterCallback())
     this.filterDefinitions.clear();
     this.clearFilterNotifySubject.next();
-    this.publish();
+    this.publish(null);
   }
 }

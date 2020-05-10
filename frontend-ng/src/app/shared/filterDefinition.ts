@@ -1,6 +1,11 @@
 import {Artifact} from "./generated/domain";
 
 
+export interface FilterChangeEvent {
+  triggerFilterId: string;
+  filters: FilterDefinition[];
+}
+
 export interface FilterDefinition {
   id: string;
   filterFunction: FilterFunction;

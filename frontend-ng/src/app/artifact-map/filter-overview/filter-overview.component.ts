@@ -18,8 +18,8 @@ export class FilterOverviewComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.artifactImagesService.filters$.subscribe(filters => {
-      this.filters = filters;
+    this.artifactImagesService.filters$.subscribe(filterChangeEvent => {
+      this.filters = filterChangeEvent.filters;
     });
   }
 
