@@ -3,8 +3,8 @@
       *ngFor="let filter of filters"
       [selectable]="true"
       [removable]="true"
-      (removed)="remove(filter)">
-      {{filter}}
+      (removed)="remove(filter.id)">
+      {{filter.description}}
       <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
     </mat-chip>
   </mat-chip-list>

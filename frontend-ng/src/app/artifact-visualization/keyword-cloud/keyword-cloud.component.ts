@@ -21,6 +21,7 @@ export class KeywordCloudComponent implements OnInit {
   private data: Artifact[];
   private filterId: string = "KEYWORD_CLOUD_FILTER";
   private selectedKeywordIds: number[] = [];
+  private keywordMap: Map<number, KeywordSummary> = new Map<number, KeywordSummary>();
 
   constructor(private artifactImagesService: ArtifactImageService, private http: HttpClient) {
   }
@@ -62,11 +63,6 @@ export class KeywordCloudComponent implements OnInit {
 
 
     });
-
-    this.artifactImagesService.clearFilterNotify$.subscribe(value => {
-      D3.select(".currentSelectedKeyword").classed("currentSelectedKeyword", false);
-      this.selectedKeywordIds = [];
-    })
   }
 
   private artifactMatchesFilters(artifact: Artifact, filters: FilterDefinition[]) {
@@ -80,7 +76,11 @@ export class KeywordCloudComponent implements OnInit {
 
   private initCloud(data: Artifact[]) {
     let keywordMap: Map<string, number> = new Map<string, number>();
-    let mappedData = this.mapData(data, keywordMap);
+    let mappedData: KeywordSummary[] = this.mapData(data, keywordMap);
+
+    mappedData.forEach(keywordSummary => {
+      this.keywordMap.set(keywordSummary.id, keywordSummary);
+    })
 
     let myScale = D3.scaleLog()
       .base(2)
@@ -138,23 +138,32 @@ export class KeywordCloudComponent implements OnInit {
   }
 
   private addKeywordFilter(keywordId: number) {
-    console.log("adding keyword filter for id "+keywordId);
-    console.log("current selected keywords: "+this.selectedKeywordIds);
+    let self = this;
     if (this.selectedKeywordIds.includes(keywordId)) {
-      this.selectedKeywordIds.splice(this.selectedKeywordIds.indexOf(keywordId, 0));
+      this.selectedKeywordIds.splice(this.selectedKeywordIds.indexOf(keywordId, 0), 1);
     } else {
       this.selectedKeywordIds.push(keywordId);
     }
-    console.log("current selected keywords: "+this.selectedKeywordIds);
-    this.artifactImagesService.removeFilter(this.filterId);
-    this.artifactImagesService.addFilterById(this.filterId, artifact => {
-      for(var selectedKeywordId of this.selectedKeywordIds) {
-        if (!artifact.keywords.map(keyword => keyword.id).includes(selectedKeywordId)){
-          return false;
-        }
-      }
-      return true;
-    })
+    if (this.selectedKeywordIds.length > 0) {
+      this.artifactImagesService.addFilterById(
+        this.filterId,
+        `Keywords: ${this.selectedKeywordIds.map(id => this.keywordMap.get(id).text).join(", ")}`,
+        artifact => {
+          for(var selectedKeywordId of this.selectedKeywordIds) {
+            if (!artifact.keywords.map(keyword => keyword.id).includes(selectedKeywordId)){
+              return false;
+            }
+          }
+          return true;
+        },
+        () => {
+          D3.select(".currentSelectedKeyword").classed("currentSelectedKeyword", false);
+          self.selectedKeywordIds = [];
+        })
+    } else {
+      this.artifactImagesService.removeFilterAndPublish(this.filterId);
+    }
+
   }
 
   private mapData(data: Artifact[], keywordMap: Map<string, number>): KeywordSummary[] {

@@ -43,6 +43,7 @@ import { ImagePreloaderComponent } from './artifact-management/image-preloader/i
 import { AuthorBubblesComponent } from './artifact-visualization/author-bubbles/author-bubbles.component';
 import { FilterOverviewComponent } from './artifact-map/filter-overview/filter-overview.component';
 import {MatChipsModule} from "@angular/material/chips";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 const globalRippleConfig: RippleGlobalOptions = {
   disabled: false
@@ -66,35 +67,36 @@ const globalRippleConfig: RippleGlobalOptions = {
     AuthorBubblesComponent,
     FilterOverviewComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    MatSliderModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatMenuModule,
-    MatIconModule,
-    MatTabsModule,
-    MatToolbarModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatProgressSpinnerModule,
-    MatBottomSheetModule,
-    MatDialogModule,
-    MatSelectModule,
-    MatSidenavModule,
-    MatCheckboxModule,
-    FormsModule,
-    MatButtonModule,
-    MatRippleModule,
-    MatExpansionModule,
-    MatRadioModule,
-    MatCardModule,
-    MatChipsModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        HttpClientModule,
+        MatSliderModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatMenuModule,
+        MatIconModule,
+        MatTabsModule,
+        MatToolbarModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatProgressSpinnerModule,
+        MatBottomSheetModule,
+        MatDialogModule,
+        MatSelectModule,
+        MatSidenavModule,
+        MatCheckboxModule,
+        FormsModule,
+        MatButtonModule,
+        MatRippleModule,
+        MatExpansionModule,
+        MatRadioModule,
+        MatCardModule,
+        MatChipsModule,
+        MatTooltipModule
+    ],
   entryComponents: [ArtifactImagePopupComponent, ArtifactDetailsComponent, ArtifactMapPopupComponent],
   providers: [{provide: MAT_RIPPLE_GLOBAL_OPTIONS, useValue: globalRippleConfig}
   ],

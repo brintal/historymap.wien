@@ -3,6 +3,18 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+.mat-tooltip {
+  font-size: 15px !important;
+  background-color: rgba(0, 0, 0, .8) !important;
+}
+
+.infoIcon {
+  color: orangered;
+  //font-weight: bolder;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+
 //.cdk-global-overlay-wrapper {
 //  display: flex;
 //  position: absolute;

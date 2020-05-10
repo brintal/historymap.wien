@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import {ArtifactImageService} from "../shared/artifact-image.service";
+import {Artifact} from "../../shared/generated/domain";
+import * as D3 from "d3";
+import {FilterDefinition} from "../../shared/filterDefinition";
 
 @Component({
   selector: 'app-filter-overview',
@@ -7,20 +11,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FilterOverviewComponent implements OnInit {
 
-  filters: string[] = ['Time: 1600-1700', 'Author: August Stauda', 'Technique: Photography'];
+  filters: FilterDefinition[] = [];
 
 
-  constructor() { }
+  constructor(private artifactImagesService: ArtifactImageService) { }
 
   ngOnInit(): void {
+
+    this.artifactImagesService.filters$.subscribe(filters => {
+      this.filters = filters;
+    });
   }
 
-  remove(fruit: string): void {
-    const index = this.filters.indexOf(fruit);
-
-    if (index >= 0) {
-      this.filters.splice(index, 1);
-    }
+  remove(filterId: string): void {
+    this.artifactImagesService.removeFilterAndPublish(filterId);
   }
 
 }

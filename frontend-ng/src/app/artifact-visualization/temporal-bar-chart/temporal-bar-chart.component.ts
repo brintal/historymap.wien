@@ -31,6 +31,8 @@ export class TemporalBarChartComponent implements OnInit {
   private colorRange = Array.from(d3.schemeSpectral[11].entries()).map(value => value[1]);
   // @ts-ignore
   private color = d3.scaleLinear().range(this.colorRange).domain([1650, 1700, 1750, 1775, 1800, 1825, 1850, 1875, 1900, 1950, 1990]);
+  private brushSelectionIndexFrom:number;
+  private brushSelectionIndexTo:number;
 
   constructor(private artifactImagesService: ArtifactImageService) {
   }
@@ -108,19 +110,15 @@ export class TemporalBarChartComponent implements OnInit {
       .call(yAxis);
 
 
-    this.artifactImagesService.clearFilterNotify$.subscribe(value => {
-      d3.selectAll(".brush").remove();
-      this.initBrush();
-    });
+    // this.artifactImagesService.clearFilterNotify$.subscribe(value => {
+    //   this.clearFilter();
+    // });
 
   }
-
 
   private updateBarChart(data: [number, number][]) {
 
     // data = data.filter(value => value[1] > 0);
-
-    let self = this;
 
     let rects: Selection<SVGRectElement, [number, number], any, any>;
     rects = this.chart.selectAll<SVGRectElement, any>("rect")
@@ -154,6 +152,8 @@ export class TemporalBarChartComponent implements OnInit {
 
   private initBrush() {
 
+    let self = this;
+
     this.brush = d3.brushX().extent([[0, 0], [this.width, this.height]]);
 
     let brushElement = this.chart.append("g")
@@ -164,18 +164,33 @@ export class TemporalBarChartComponent implements OnInit {
     this.brush.on("end", () => { //on: "end" or "brush"
       if (!d3.event.sourceEvent) return; // Only transition after input.
       if (!d3.event.selection) return; // Ignore empty selections.
-      if (d3.event.selection[3] == "manual") return;
 
-      console.log(d3.event.selection);
-      let brushSelectionFrom = d3.event.selection[0]
-      let brushSelectionTo = d3.event.selection[1]
-
-      let index1 = Math.round((brushSelectionFrom / this.x.step())) - 1;
+      let index1 = Math.round((d3.event.selection[0] / this.x.step())) - 1;
+      let index2 = Math.round((d3.event.selection[1] / this.x.step())) - 1;
       let val1 = this.x.domain()[index1] || 0;
-      let index2 = Math.round((brushSelectionTo / this.x.step())) - 1;
       let val2 = this.x.domain()[index2] || 2000;
-      this.artifactImagesService.removeFilter(this.filterId);
-      this.artifactImagesService.addFilterById(this.filterId, artifact => (artifact.year >= Number(val1) && artifact.year <= Number(val2)));
+
+      if (this.brushSelectionIndexFrom != null
+        && this.brushSelectionIndexTo != null
+        && this.brushSelectionIndexFrom == index1
+        && this.brushSelectionIndexTo == index2) return;
+
+      this.brushSelectionIndexFrom = index1;
+      this.brushSelectionIndexTo = index2;
+
+      // @ts-ignore
+      this.chart.select(".brush").transition(this.t).call(this.brush.move, [this.x(val1.toString()), this.x(val2.toString())]);
+      this.artifactImagesService.addFilterById(
+        this.filterId,
+          `Time: ${val1}-${val2}`,
+          artifact => (artifact.year >= Number(val1) && artifact.year <= Number(val2)),
+          () => {
+            d3.selectAll(".brush").remove();
+            self.initBrush();
+            self.brushSelectionIndexFrom = null;
+            self.brushSelectionIndexTo = null;
+          });
+
 
     });
 
