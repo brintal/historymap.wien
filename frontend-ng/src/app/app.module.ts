@@ -32,7 +32,7 @@ import {MatSelectModule} from "@angular/material/select";
 import { KeywordCloudComponent } from './artifact-visualization/keyword-cloud/keyword-cloud.component';
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatCheckboxModule} from "@angular/material/checkbox";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButtonModule} from "@angular/material/button";
 import {MAT_RIPPLE_GLOBAL_OPTIONS, MatRippleModule, RippleGlobalOptions} from "@angular/material/core";
 import {MatExpansionModule} from "@angular/material/expansion";
@@ -44,6 +44,7 @@ import { AuthorBubblesComponent } from './artifact-visualization/author-bubbles/
 import { FilterOverviewComponent } from './artifact-map/filter-overview/filter-overview.component';
 import {MatChipsModule} from "@angular/material/chips";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
 
 const globalRippleConfig: RippleGlobalOptions = {
   disabled: false
@@ -67,36 +68,38 @@ const globalRippleConfig: RippleGlobalOptions = {
     AuthorBubblesComponent,
     FilterOverviewComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        HttpClientModule,
-        MatSliderModule,
-        MatTableModule,
-        MatPaginatorModule,
-        MatSortModule,
-        MatMenuModule,
-        MatIconModule,
-        MatTabsModule,
-        MatToolbarModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatProgressSpinnerModule,
-        MatBottomSheetModule,
-        MatDialogModule,
-        MatSelectModule,
-        MatSidenavModule,
-        MatCheckboxModule,
-        FormsModule,
-        MatButtonModule,
-        MatRippleModule,
-        MatExpansionModule,
-        MatRadioModule,
-        MatCardModule,
-        MatChipsModule,
-        MatTooltipModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    HttpClientModule,
+    MatSliderModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatMenuModule,
+    MatIconModule,
+    MatTabsModule,
+    MatToolbarModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatProgressSpinnerModule,
+    MatBottomSheetModule,
+    MatDialogModule,
+    MatSelectModule,
+    MatSidenavModule,
+    MatCheckboxModule,
+    FormsModule,
+    MatButtonModule,
+    MatRippleModule,
+    MatExpansionModule,
+    MatRadioModule,
+    MatCardModule,
+    MatChipsModule,
+    MatTooltipModule,
+    MatAutocompleteModule,
+    ReactiveFormsModule
+  ],
   entryComponents: [ArtifactImagePopupComponent, ArtifactDetailsComponent, ArtifactMapPopupComponent],
   providers: [{provide: MAT_RIPPLE_GLOBAL_OPTIONS, useValue: globalRippleConfig}
   ],

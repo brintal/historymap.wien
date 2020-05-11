@@ -9,7 +9,14 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 
 .infoIcon {
-  color: orangered;
+  color: #ffeb3b;
+  //font-weight: bolder;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+
+.warningIcon {
+  color: red;
   //font-weight: bolder;
   margin-left: 10px;
   margin-top: 10px;

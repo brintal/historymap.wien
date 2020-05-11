@@ -9,8 +9,7 @@
     </div>
     <br/>
     <br/>
-    <h3>Explore the collection</h3>
-
+    <br/>
     <div class="example-headers-align">
       <mat-expansion-panel>
         <mat-expansion-panel-header>
@@ -23,7 +22,7 @@
           </mat-panel-description>
         </mat-expansion-panel-header>
         <div class="overlaySelect">
-            <mat-label>Select which historic map should be used on the map. </mat-label>
+            <mat-icon class="infoIcon" matTooltip="Select here which historic map should be displayed on the map. Please keep in mind that old maps normally only cover the center of the city.">info_outline</mat-icon><br/>
             <mat-radio-group [(ngModel)]="selectedOverlay" (change)="onOverlayChange()" aria-label="Select an option" class="overlay-radio-group">
               <mat-radio-button value="none">None</mat-radio-button>
               <mat-radio-button value="huber">Huber 1778</mat-radio-button>
@@ -32,7 +31,6 @@
               <mat-radio-button value="luftbild1938">Luftbild 1938</mat-radio-button>
               <mat-radio-button value="luftbild1956">Luftbild 1956</mat-radio-button>
             </mat-radio-group>
-          <p>Please note that old maps normally only cover the very center of the city.</p>
 <!--            <mat-select [(value)]="selectedOverlay" (selectionChange)="onOverlayChange()">-->
 <!--              <mat-option value="none">None</mat-option>-->
 <!--              <mat-option value="huber">Huber 1778</mat-option>-->
