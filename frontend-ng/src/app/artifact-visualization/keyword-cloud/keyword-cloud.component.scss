@@ -1,10 +1,10 @@
 .currentSelectedKeyword {
-  fill: white !important;
+  fill: #ff5722 !important;
   text-decoration: underline;
 }
 
 .unavailableKeyword {
-  fill: rgba(113,113,113,0.44) !important;
+  fill: rgba(181, 181, 181, 0.2) !important;
   cursor: auto !important;
   pointer-events: none;
 }

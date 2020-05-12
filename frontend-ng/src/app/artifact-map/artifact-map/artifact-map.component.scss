@@ -18,7 +18,7 @@
   border-radius: 0px 10px 0px 0px;
   position: absolute;
   bottom: 0;
-  background-color: rgba(0, 0, 0, .6);
+  background-color: rgba(0, 0, 0, .2);
   z-index: 9999999999999999999999999999;
 }
 
@@ -61,27 +61,27 @@ h3 {
 }
 
 .marker-cluster-large div {
-  background-color: #d84315;
+  background-color: rgba(251, 192, 45, 0.90);
 }
 
 .marker-cluster-large {
-  background-color: #ff5722;
+  background-color: rgba(251, 192, 45, 0.70);
 }
 
 .marker-cluster-medium div {
-  background-color: #ff5722;
+  background-color: rgba(255, 235, 59, 0.9);
 }
 
 .marker-cluster-medium {
-  background-color: #ff8a65;
+  background-color: rgba(255, 235, 59, 0.7);
 }
 
 .marker-cluster-small div {
-  background-color: #ff8a65;
+  background-color: rgba(255, 245, 157, 0.9);
 }
 
 .marker-cluster-small {
-  background-color: #ffab91;
+  background-color: rgba(255, 245, 157, 0.7);
 }
 
 

@@ -29,7 +29,7 @@ export class AuthorBubblesComponent implements OnInit {
   private data: Artifact[];
   myControl = new FormControl();
   private fontScale: ScaleLogarithmic<number, number>;
-  private color = d3.scaleOrdinal(d3.schemePaired);
+  private color = d3.scaleOrdinal(d3.schemeCategory10);
 
   filteredOptions: Observable<Bubble[]>;
   private currentData: Bubble[] = [];
@@ -85,16 +85,23 @@ export class AuthorBubblesComponent implements OnInit {
     let totalUndfArts: number = 0;
     let otherAuthorIds: number[] = [];
 
-    authorMap.forEach((value: number, key: string) => {
-      let author: Person = JSON.parse(key);
-      if (value >= 5) {
+    if (authorMap.size <= 40) {
+      authorMap.forEach((value: number, key: string) => {
+        let author: Person = JSON.parse(key);
         this.currentData.push({name: author.name, id: author.id, value: value});
-      } else {
-        otherAuthorIds.push(author.id);
-        totalUndfArts = totalUndfArts + value;
-      }
-    });
-    this.currentData.push({name: "Others", id: -1, value: totalUndfArts});
+      });
+    }  else {
+      authorMap.forEach((value: number, key: string) => {
+        let author: Person = JSON.parse(key);
+        if (value >= 5) {
+          this.currentData.push({name: author.name, id: author.id, value: value});
+        } else {
+          otherAuthorIds.push(author.id);
+          totalUndfArts = totalUndfArts + value;
+        }
+      });
+      this.currentData.push({name: "Others", id: -1, value: totalUndfArts});
+    }
     this.currentData = this.currentData.sort((n1,n2) => {
       if (n1.value < n2.value) {
         return 1;
@@ -121,7 +128,7 @@ export class AuthorBubblesComponent implements OnInit {
     this.fontScale = d3.scaleLog()
       .base(2)
       .domain([1, maxVal])
-      .range([4, 16]);
+      .range([8, 16]);
 
     // let fontScale = d3.scaleLinear()
     //   .domain([10, maxVal])
@@ -134,6 +141,7 @@ export class AuthorBubblesComponent implements OnInit {
     const height = +svg.attr('height');
     // @ts-ignore
     svg
+
       // .attr("viewBox", [0, 0, width, height])
       .attr("font-size", 8)
       .attr("font-family", "sans-serif")
@@ -188,7 +196,7 @@ export class AuthorBubblesComponent implements OnInit {
       })
       .attr("id", (d: any) => "bubbletext" + d.data.id)
       .selectAll("tspan")
-      .data((d: any) => d.data.name.split(/(?=[A-Z][a-z])|\s+/g))
+      .data((d: any) => (d.data.name+" ("+d.data.value+")").split(/(?=[A-Z][a-z])|\s+/g))
       .join("tspan")
       .style("fill", "rgba(0, 0, 0, 0.1)")
       .attr("x", 0)
@@ -251,7 +259,9 @@ export class AuthorBubblesComponent implements OnInit {
     d3.select("#bubbletext" + bubbleId).style("font-size", (d: any) => this.fontScale(d.value) + 6);
     d3.select("#bubble" + bubbleId).transition().duration(300)
       .attr("r", (d: any) => d.r + 30)
-      .attr("fill", "white");
+      .attr("fill", "white")
+      .attr("stroke", "black")
+      .attr("stroke-width", 2);
   }
 
   private unRaiseBubble(bubbleId: number) {
@@ -261,7 +271,8 @@ export class AuthorBubblesComponent implements OnInit {
       });
     d3.select("#bubble" + bubbleId).transition().duration(300)
       .attr("r", (d: any) => d.r)
-      .attr("fill", (d: any) => this.color(bubbleId.toString()));
+      .attr("fill", (d: any) => this.color(bubbleId.toString()))
+      .attr("stroke-width", 0);
   }
 
   private _filter(value: string): Bubble[] {

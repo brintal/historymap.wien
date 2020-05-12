@@ -1,19 +1,21 @@
 .links line {
-  stroke: white;
+  stroke: gray;
 }
 
 .nodes circle {
-  stroke: #fff;
-  stroke-width: 1.5px;
+  stroke: darkgray;
+  stroke-width: 1px;
   cursor: pointer;
 }
 
 .currentSelectedAuthor {
   fill: #ffeb3b !important;
+  stroke: black !important;
+  stroke-width: 2px!important;
 }
 .mouseovernode {
   fill: #ffab91 !important;
 }
 .mouseovernodegroup {
-  fill: #FF337D !important;
+  fill: #ffab91 !important;
 }

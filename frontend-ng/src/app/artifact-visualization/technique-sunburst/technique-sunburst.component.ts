@@ -71,7 +71,7 @@ export class TechniqueSunburstComponent implements OnInit {
 
   private initColors(root: SunburstDto) {
     this.colorMap = new Map<string, any>();
-    const color = d3.scaleOrdinal(d3.schemeCategory10);
+    const color = d3.scaleOrdinal(d3.schemePastel1);
     for (var child of root.children) {
       this.colorMap.set(child.name, color(child.name));
     }
@@ -90,8 +90,8 @@ export class TechniqueSunburstComponent implements OnInit {
     this.graph = Sunburst()
       .data(mappedData)
       .size('value')
-      .width(400)
-      .height(400)
+      .width(500)
+      .height(500)
       .onClick(node => {
         // @ts-ignore
         this.onClick(node);
@@ -100,12 +100,12 @@ export class TechniqueSunburstComponent implements OnInit {
       // @ts-ignore
       .color(obj => {
         if (obj.name == 'Techniken') {
-          return '#303030';
+          return '#E8E8E8';
         }
         if (obj.__dataNode.parent != null && obj.__dataNode.parent.data.name != 'Techniken') {
-          return d3.rgb(this.colorMap.get(obj.__dataNode.parent.data.name)).brighter(1);
+          return d3.rgb(this.colorMap.get(obj.__dataNode.parent.data.name)).brighter(0.3);
         }
-        return this.colorMap.get(obj.name);
+        return d3.rgb(this.colorMap.get(obj.name)).darker(0.2);
 
       })
       .tooltipTitle(node => node.name)
