@@ -1,3 +1,30 @@
+#artifactPopupDescription {
+  margin-left: 15px;
+}
 .detailsLink {
+  width: 100%;
+  text-align: center;
   cursor: pointer;
+}
+#wrapper {
+  display: table;
+  width: 340px;
+}
+
+#artifactImageWrapper {
+
+}
+
+#detailsLinkWrapper {
+  display: table-cell;
+}
+
+#leftButton {
+  width: 20px;
+  display: table-cell;
+}
+
+#rightButton {
+  width: 20px;
+  display: table-cell;
 }

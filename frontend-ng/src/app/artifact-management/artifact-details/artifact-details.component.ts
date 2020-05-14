@@ -29,6 +29,7 @@ export class ArtifactDetailsComponent implements OnInit {
     this.tableData.push(["Technique", this.getTechniqueName()]);
     this.tableData.push(["Technique Category", this.getCategoryName()]);
     this.tableData.push(["Authors", this.getAuthors()]);
+    this.tableData.push(["Keywords", this.getKeywords()]);
     this.tableData.push(["Location", data.location.latitude + " " + data.location.longitude]);
   }
 
@@ -49,6 +50,10 @@ export class ArtifactDetailsComponent implements OnInit {
     } else {
       return this.data.technique.category.name;
     }
+  }
+
+  private getKeywords(): string {
+    return this.data.keywords.map(keyword => keyword.value).join(", ");
   }
 
   private getAuthors(): string {

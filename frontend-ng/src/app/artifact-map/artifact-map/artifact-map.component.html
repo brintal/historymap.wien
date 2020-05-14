@@ -1,29 +1,36 @@
-
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #snav mode="side" fixedTopGap="56" position="end">
-    <div id="closeButtonRow">
-      <button #snavbutton mat-mini-fab color="accent"(click)="toggleSidebar();" style="float: right;">
-        <mat-icon>arrow_forward</mat-icon>
-      </button>
-      <button mat-raised-button color="primary" (click)="clearFilters();" style="float: left;">Clear Filters<mat-icon>delete</mat-icon></button>
-    </div>
-    <br/>
-    <br/>
-    <br/>
-    <div class="example-headers-align">
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            Map Overlay
-          </mat-panel-title>
-          <mat-panel-description>
-            &nbsp;
-            <mat-icon>layers</mat-icon>
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-        <div class="overlaySelect">
-            <mat-icon class="infoIcon" matTooltip="Select here which historic map should be displayed on the map. Please keep in mind that old maps normally only cover the center of the city.">info_outline</mat-icon><br/>
-            <mat-radio-group [(ngModel)]="selectedOverlay" (change)="onOverlayChange()" aria-label="Select an option" class="overlay-radio-group">
+    <div id="matSideBarContainer">
+      <div id="closeButtonRow">
+        <button #snavbutton id="sideNavCloseButton" mat-mini-fab color="accent" (click)="toggleSidebar();" >
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+        <button id="sideClearFiltersButton" mat-raised-button (click)="clearFilters();" >Clear Filters
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+      <br/>
+      <br/>
+      <br/>
+      <div id="sidebarExpansionPanelHolder" class="example-headers-align">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Map Overlay
+            </mat-panel-title>
+            <mat-panel-description>
+              &nbsp;
+              <mat-icon>layers</mat-icon>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <div class="overlaySelect">
+            <mat-icon class="infoIcon"
+                      matTooltip="Select here which historic map should be displayed on the map. Please keep in mind that old maps normally only cover the center of the city." #tooltip="matTooltip" (click)="tooltip.toggle()">
+              info
+            </mat-icon>
+            <br/>
+            <mat-radio-group [(ngModel)]="selectedOverlay" (change)="onOverlayChange()" aria-label="Select an option"
+                             class="overlay-radio-group">
               <mat-radio-button value="none">None</mat-radio-button>
               <mat-radio-button value="huber">Huber 1778</mat-radio-button>
               <mat-radio-button value="grimm">Grimm 1806</mat-radio-button>
@@ -31,101 +38,107 @@
               <mat-radio-button value="luftbild1938">Luftbild 1938</mat-radio-button>
               <mat-radio-button value="luftbild1956">Luftbild 1956</mat-radio-button>
             </mat-radio-group>
-<!--            <mat-select [(value)]="selectedOverlay" (selectionChange)="onOverlayChange()">-->
-<!--              <mat-option value="none">None</mat-option>-->
-<!--              <mat-option value="huber">Huber 1778</mat-option>-->
-<!--              <mat-option value="grimm">Grimm 1806</mat-option>-->
-<!--              <mat-option value="moerschner">Mörschner 1825</mat-option>-->
-<!--              <mat-option value="luftbild1938">Luftbild 1938</mat-option>-->
-<!--              <mat-option value="luftbild1956">Luftbild 1956</mat-option>-->
-<!--            </mat-select>-->
-          <br/>
-        </div>
-      </mat-expansion-panel>
-<!--      <mat-expansion-panel >-->
-<!--        <mat-expansion-panel-header>-->
-<!--          <mat-panel-title>-->
-<!--            Temporal Chart-->
-<!--          </mat-panel-title>-->
-<!--          <mat-panel-description>-->
-<!--            &nbsp;-->
-<!--            <mat-icon>bar_chart</mat-icon>-->
-<!--          </mat-panel-description>-->
-<!--        </mat-expansion-panel-header>-->
-<!--        <app-temporal-bar-chart chartId="sidebarTempChart"></app-temporal-bar-chart>-->
-<!--      </mat-expansion-panel>-->
-      <mat-expansion-panel >
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            Keyword Cloud
-          </mat-panel-title>
-          <mat-panel-description>
-            &nbsp;
-            <mat-icon>cloud</mat-icon>
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-        <app-keyword-cloud></app-keyword-cloud>
-      </mat-expansion-panel>
-      <mat-expansion-panel >
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            Creation Techniques
-          </mat-panel-title>
-          <mat-panel-description>
-            &nbsp;
-            <mat-icon>brush</mat-icon>
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-        <app-technique-sunburst></app-technique-sunburst>
-      </mat-expansion-panel>
-      <mat-expansion-panel >
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            Authors
-          </mat-panel-title>
-          <mat-panel-description>
-            &nbsp;
-            <mat-icon>people</mat-icon>
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-        <app-author-bubbles></app-author-bubbles>
-      </mat-expansion-panel>
-      <mat-expansion-panel >
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            Author Network
-          </mat-panel-title>
-          <mat-panel-description>
-            &nbsp;
-            <mat-icon>device_hub</mat-icon>
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-        <app-author-network></app-author-network>
-      </mat-expansion-panel>
+            <!--            <mat-select [(value)]="selectedOverlay" (selectionChange)="onOverlayChange()">-->
+            <!--              <mat-option value="none">None</mat-option>-->
+            <!--              <mat-option value="huber">Huber 1778</mat-option>-->
+            <!--              <mat-option value="grimm">Grimm 1806</mat-option>-->
+            <!--              <mat-option value="moerschner">Mörschner 1825</mat-option>-->
+            <!--              <mat-option value="luftbild1938">Luftbild 1938</mat-option>-->
+            <!--              <mat-option value="luftbild1956">Luftbild 1956</mat-option>-->
+            <!--            </mat-select>-->
+            <br/>
+          </div>
+        </mat-expansion-panel>
+        <!--      <mat-expansion-panel >-->
+        <!--        <mat-expansion-panel-header>-->
+        <!--          <mat-panel-title>-->
+        <!--            Temporal Chart-->
+        <!--          </mat-panel-title>-->
+        <!--          <mat-panel-description>-->
+        <!--            &nbsp;-->
+        <!--            <mat-icon>bar_chart</mat-icon>-->
+        <!--          </mat-panel-description>-->
+        <!--        </mat-expansion-panel-header>-->
+        <!--        <app-temporal-bar-chart chartId="sidebarTempChart"></app-temporal-bar-chart>-->
+        <!--      </mat-expansion-panel>-->
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Authors
+            </mat-panel-title>
+            <mat-panel-description>
+              &nbsp;
+              <mat-icon>people</mat-icon>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <app-author-bubbles></app-author-bubbles>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Keyword Cloud
+            </mat-panel-title>
+            <mat-panel-description>
+              &nbsp;
+              <mat-icon>cloud</mat-icon>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <app-keyword-cloud></app-keyword-cloud>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Creation Techniques
+            </mat-panel-title>
+            <mat-panel-description>
+              &nbsp;
+              <mat-icon>brush</mat-icon>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <app-technique-sunburst></app-technique-sunburst>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Author Network
+            </mat-panel-title>
+            <mat-panel-description>
+              &nbsp;
+              <mat-icon>device_hub</mat-icon>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <app-author-network></app-author-network>
+        </mat-expansion-panel>
+      </div>
+
     </div>
 
-
-
-
-    <br/>
-
-    <br/>
 
   </mat-sidenav>
 
   <mat-sidenav-content>
     <div id="buttonRow">
-    <button #snavbutton matRipple id="sidenavButton" mat-fab (click)="toggleSidebar();" class="mapButton">
-      <mat-icon>tune</mat-icon>
-    </button>
-    <button #mylocationbutton id="mylocationbutton" mat-fab (click)="centerMyLocation();" class="mapButton">
-      <mat-icon>my_location</mat-icon>
-    </button>
-    <app-filter-overview></app-filter-overview>
+      <button #snavbutton matRipple id="sidenavButton" mat-fab (click)="toggleSidebar();" class="mapButton">
+        <mat-icon>tune</mat-icon>
+      </button>
+      <button #mylocationbutton id="mylocationbutton" mat-fab (click)="centerMyLocation();" class="mapButton">
+        <mat-icon>my_location</mat-icon>
+      </button>
+      <app-filter-overview></app-filter-overview>
     </div>
     <div id="mapHolder">
-        <div id="mapid"></div>
-        <app-temporal-bar-chart id="bottomTemporalChart" [showDescription]="false" chartId="bottomTempChart"></app-temporal-bar-chart>
+      <div id="mapid"></div>
+      <div id="bottomSlider" [ngClass]="{ 'slideIn' : slidedIn, 'slideOut' : !slidedIn }">
+        <div class="bottomSliderButtonHolder">
+          <button *ngIf="!slidedIn" class="bottomSliderButton" mat-mini-fab (click)="toggleSlider()">
+            <mat-icon>unfold_more</mat-icon>
+          </button>
+          <button *ngIf="slidedIn" class="bottomSliderButton" mat-mini-fab (click)="toggleSlider()">
+            <mat-icon>expand_more</mat-icon>
+          </button>
+        </div>
+        <app-temporal-bar-chart id="bottomTemporalChart" [showDescription]="false"></app-temporal-bar-chart>
+      </div>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

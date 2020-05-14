@@ -41,10 +41,9 @@ export class AuthorBubblesComponent implements OnInit {
   ngOnInit(): void {
 
     // d3.csv("assets/flare.csv").then(root => {
-    let subscription = this.artifactImagesService.artifactData$.subscribe(data => {
+    this.artifactImagesService.artifactData$.subscribe(data => {
       this.data = data;
       this.initChart(this.data);
-      subscription.unsubscribe();
     });
 
     this.artifactImagesService.filters$.subscribe(filterChangeEvent => {
@@ -156,7 +155,7 @@ export class AuthorBubblesComponent implements OnInit {
 
     var pack =
       d3.pack()
-        .size([width - 2, height - 2])
+        .size([width - 50, height - 50])
         .padding(3)(rootLayout);
 
     var nodes = pack.leaves();
@@ -164,7 +163,7 @@ export class AuthorBubblesComponent implements OnInit {
     const leaf = svg.selectAll("g")
       .data(nodes)
       .join("g")
-      .attr("transform", (d: any) => `translate(${d.x + 1},${d.y + 1})`)
+      .attr("transform", (d: any) => `translate(${d.x + 25},${d.y + 25})`)
       .attr("id", (d: any) => "bubbleHolder" + d.data.id)
       .on("mouseover", (d: any) => this.raiseBubble(d.data.id))
       .on("mouseout", (d: any) => this.unRaiseBubble(d.data.id));

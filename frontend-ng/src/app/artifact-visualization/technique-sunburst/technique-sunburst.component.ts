@@ -43,15 +43,9 @@ export class TechniqueSunburstComponent implements OnInit {
   ngOnInit() {
 
 
-    let subscription = this.artifactImagesService.artifactData$.subscribe(data => {
+    this.artifactImagesService.artifactData$.subscribe(data => {
       this.data = data;
-      let graph = this.initSunburstGraph(data);
-      subscription.unsubscribe();
-
-      // this.artifactImagesService.clearFilterNotify$.subscribe(value => {
-      //   this.initSunburstGraph(this.data)
-      //   graph.focusOnNode(graph.data());
-      // });
+      this.initSunburstGraph(data);
     });
 
     this.artifactImagesService.filters$.subscribe(filterChangeEvent => {
@@ -90,8 +84,8 @@ export class TechniqueSunburstComponent implements OnInit {
     this.graph = Sunburst()
       .data(mappedData)
       .size('value')
-      .width(500)
-      .height(500)
+      .width(450)
+      .height(450)
       .onClick(node => {
         // @ts-ignore
         this.onClick(node);

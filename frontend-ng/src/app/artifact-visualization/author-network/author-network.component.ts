@@ -46,7 +46,8 @@ interface AuthorLink {
 })
 export class AuthorNetworkComponent implements OnInit {
 
-  private filterId: string;
+  private filterId: string = "AUTHOR_NETWORK_FILTER";
+  private selectedAuthorIds: number[] = [];
   private selectedAuthorId1: number;
   private selectedAuthorId2: number;
   private data: Artifact[];
@@ -54,6 +55,9 @@ export class AuthorNetworkComponent implements OnInit {
   private height = 400;
   private margin = {top: 30, right: 30, bottom: 30, left: 30};
   private simulation = this.initSim();
+  private nodes: AuthorNode[];
+  private links: AuthorLink[];
+  private authorMap: Map<number, Person> = new Map<number, Person>();
 
   constructor(private artifactImagesService: ArtifactImageService) {
   }
@@ -62,10 +66,9 @@ export class AuthorNetworkComponent implements OnInit {
   ngOnInit() {
 
 
-    let subscription = this.artifactImagesService.artifactData$.subscribe(data => {
+    this.artifactImagesService.artifactData$.subscribe(data => {
       this.data = data;
       this.initGraph(data);
-      subscription.unsubscribe();
     });
 
 
@@ -78,10 +81,15 @@ export class AuthorNetworkComponent implements OnInit {
         if (filter.id == this.filterId) continue;
         filteredData = filteredData.filter(filter.filterFunction);
       }
-      d3.select(".network").selectAll("*").remove();
-      console.log("received filters")
-      this.simulation = this.initSim();
-      this.initGraph(filteredData);
+      if (filterChangeEvent.triggerFilterId != this.filterId) {
+        d3.select(".network").selectAll("*").remove();
+        this.simulation = this.initSim();
+        this.initGraph(filteredData);
+        this.selectedAuthorIds.forEach(selectedAuthorId => {
+          this.disableAllUnconnectedNodes(selectedAuthorId);
+          d3.select("#author" + selectedAuthorId).classed("currentSelectedAuthor", true);
+        })
+      }
     });
 
 
@@ -101,15 +109,15 @@ export class AuthorNetworkComponent implements OnInit {
     svg.attr("width", this.width)
       .attr("height", this.height);
 
-    let authorMap: Map<number, Person> = new Map<number, Person>();
+    this.authorMap = new Map<number, Person>();
     let linkMap: Map<string, AuthorLink> = new Map<string, AuthorLink>();
 
     for (var artifact of data) {
 
       if (artifact.authors.length > 1) {
         artifact.authors.forEach(person => {
-          if (!authorMap.has(person.id)) {
-            authorMap.set(person.id, person);
+          if (!this.authorMap.has(person.id)) {
+            this.authorMap.set(person.id, person);
           }
         })
 
@@ -143,7 +151,7 @@ export class AuthorNetworkComponent implements OnInit {
       }
     }
 
-    const nodes: AuthorNode[] = Array.from(authorMap.values()).map(author => {
+    this.nodes = Array.from(this.authorMap.values()).map(author => {
       return {
         id: author.id,
         group: 1,
@@ -151,9 +159,12 @@ export class AuthorNetworkComponent implements OnInit {
       }
     });
 
-    const links: AuthorLink[] = Array.from(linkMap.values());
+    this.links = Array.from(linkMap.values());
 
-    const graph: AuthorGraph = <AuthorGraph>{nodes, links};
+    const graph: AuthorGraph = {
+      links: this.links,
+      nodes: this.nodes
+    }
 
     const link = svg.append('g')
       .attr('class', 'links')
@@ -161,25 +172,44 @@ export class AuthorNetworkComponent implements OnInit {
       .data(graph.links)
       .enter()
       .append('line')
+      .attr("class", value => 'link' + value.source + '-' + value.target)
       .attr('stroke-width', (d: any) => d.value * 1.5)
       .style("visibility", "hidden");
 
     const node = svg.append('g')
       .attr('class', 'nodes')
-      .selectAll('circle')
+      .selectAll("g")
       .data(graph.nodes)
       .enter()
+      .append("g")
+      .attr('id', value => 'node'+value.id)
+      .attr('class', 'authornode');
+
+    const circle = node
       .append('circle')
       .attr('r', 8)
       .attr("id", value => 'author' + value.id)
       // @ts-ignore
-      .attr('fill', "#F0F8FF")
+      .attr('fill', "#fff59d")
       .style("visibility", "hidden")
       .on('click', author => this.addAuthorFilter(author.id));
-    node.on("mouseover", author => {
-      this.mouseovernode(links, author);
+
+    node.append("text")
+      .attr("id", value => 'authortext'+value.id)
+      .style("font-size", graph.nodes.length > 20 ? 0 : 10)
+      .style("fill", (d, i) => '#c0c0c0')
+      .text(value => value.name)
+      .attr('x', 6)
+      .attr('y', 3);
+
+
+
+    circle.on("mouseover", author => {
+      this.mouseovernode(this.links, author);
     });
-    node.on("mouseout", function (d) {
+    circle.on("mouseout", function (d) {
+      d3.select(".nodes").selectAll('text')
+        .classed("mouseovertext", false);
       d3.select(".nodes")
         .selectAll("circle")
         .classed("mouseovernodegroup", false)
@@ -198,6 +228,8 @@ export class AuthorNetworkComponent implements OnInit {
         d.fy = d.y;
       })
       .on('drag', (d: any) => {
+        d3.select(".nodes").selectAll('text')
+          .classed("mouseovertext", false);
         d.fx = d3.event.x;
         d.fy = d3.event.y;
       })
@@ -210,14 +242,13 @@ export class AuthorNetworkComponent implements OnInit {
       })
     );
 
-    node.append('title')
+    circle.append('title')
       .text((d) => d.name);
 
     this.simulation
       // @ts-ignore
       .nodes(graph.nodes)
       .on('tick', () => {
-        console.log("ontick")
         link
           .style("visibility", "visible")
           .attr('x1', function (d: any) {
@@ -234,15 +265,14 @@ export class AuthorNetworkComponent implements OnInit {
           })
         ;
 
-        node
+        circle
           .style("visibility", "visible")
-          .attr('cx', function (d: any) {
-            return d.x;
-          })
-          .attr('cy', function (d: any) {
-            return d.y;
-          })
+
         ;
+        node
+          .attr("transform", function(d:any) {
+            return "translate(" + d.x + "," + d.y + ")";
+          })
       });
 
     // @ts-ignore
@@ -250,9 +280,10 @@ export class AuthorNetworkComponent implements OnInit {
   }
 
   private mouseovernode(links: AuthorLink[], author: AuthorNode) {
-    let connectedNodeIds = links
-      .filter((x: any) => x.source.id == author.id || x.target.id == author.id)
-      .map((x: any) => x.source.id == author.id ? x.target.id : x.source.id);
+    d3.select('#node'+author.id).raise();
+    d3.select('#authortext'+author.id)
+      .classed("mouseovertext", true);
+    let connectedNodeIds = this.findConnectedNodeIds(author.id);
     for (var y of connectedNodeIds) {
       d3.select("#author" + y)
         .classed("mouseovernodegroup", true);
@@ -262,28 +293,104 @@ export class AuthorNetworkComponent implements OnInit {
 
   private addAuthorFilter(authorId: number) {
 
-    d3.select("#author" + this.selectedAuthorId1).classed("currentSelectedAuthor", false);
-    if (authorId != this.selectedAuthorId1) {
+    // if (this.selectedAuthorIds.length < 2) {
+    //   d3.select("#author" + authorId).classed("currentSelectedAuthor", true);
+    //   this.disableAllUnconnectedNodes(authorId);
+    // }
+
+    if (this.selectedAuthorIds.includes(authorId)) {
+      this.selectedAuthorIds = this.selectedAuthorIds.filter(selectedAuthorId => selectedAuthorId != authorId)
+      d3.select("#author" + authorId).classed("currentSelectedAuthor", false);
+    } else {
+      this.selectedAuthorIds.push(authorId);
       d3.select("#author" + authorId).classed("currentSelectedAuthor", true);
+      d3.select("#author" + authorId).raise();
     }
+    this.clearUnavailableElements();
 
-    if (this.selectedAuthorId1 == authorId) {
-      this.artifactImagesService.removeFilterAndPublish(this.filterId);
-      this.selectedAuthorId1 = null;
-      this.filterId = null;
-      return;
-    }
-
-    this.artifactImagesService.removeFilter(this.filterId);
-    this.filterId = this.artifactImagesService.addFilter(artifact => {
-      for (var person of artifact.authors) {
-        if (person.id == authorId) {
-          return true;
-        }
-      }
-      return false;
+    this.selectedAuthorIds.forEach(selectedAuthorId => {
+      this.disableAllUnconnectedNodes(selectedAuthorId)
     })
-    this.selectedAuthorId1 = authorId;
+    if (this.selectedAuthorIds.length > 0) {
+      console.log(this.authorMap);
+      let description = this.selectedAuthorIds.map(selectedAuthorId => {
+        return this.authorMap.get(selectedAuthorId).name
+      }).join(" - ")
+      this.artifactImagesService.addFilterById(
+        this.filterId,
+        `Related Authors: ${description}`
+        , artifact => {
+          if (artifact.authors == null || artifact.authors.length == 0) {
+            return false;
+          }
+          for (var selectedAuthorId of this.selectedAuthorIds) {
+            if (!artifact.authors.map(author => author.id).includes(selectedAuthorId)) {
+              return false;
+            }
+          }
+          return true;
+        },
+        () => {
+          console.log("clear filter called");
+          this.selectedAuthorIds = [];
+          this.clearUnavailableElements();
+        }
+      )
+    } else {
+      this.artifactImagesService.removeFilterAndPublish(this.filterId);
+    }
+
+    //
+    // if (this.selectedAuthorId1 == authorId) {
+    //   this.artifactImagesService.removeFilterAndPublish(this.filterId);
+    //   this.selectedAuthorId1 = null;
+    //   this.filterId = null;
+    //   return;
+    // }
+    //
+    // this.artifactImagesService.removeFilter(this.filterId);
+    // this.filterId = this.artifactImagesService.addFilter(artifact => {
+    //   for (var person of artifact.authors) {
+    //     if (person.id == authorId) {
+    //       return true;
+    //     }
+    //   }
+    //   return false;
+    // })
+    // this.selectedAuthorId1 = authorId;
   }
+
+  private clearUnavailableElements() {
+    d3.selectAll("line").classed("unavailableLink", false);
+    d3.selectAll("circle").classed("unavailableNode", false);
+  }
+
+  private disableAllUnconnectedNodes(authorId: number) {
+    let connectedNodeIds = this.findConnectedNodeIds(authorId);
+
+    let unconnectedNodeIds = this.nodes
+      .filter(node => !connectedNodeIds.includes(node.id) && (node.id != authorId))
+      .map(node => node.id);
+
+    unconnectedNodeIds.forEach(nodeId => {
+      d3.select("#author" + nodeId)
+        .classed("unavailableNode", true);
+    })
+
+    let unconnectedLinks = this.links
+      .filter((link: any) => !(link.source.id == authorId) && !(link.target.id == authorId));
+
+    unconnectedLinks.forEach((link: any) => {
+      d3.selectAll(".link" + link.source.id + "-" + link.target.id)
+        .classed("unavailableLink", true);
+    });
+  }
+
+  private findConnectedNodeIds(rootNodeId: number): number[] {
+    return this.links
+      .filter((x: any) => x.source.id == rootNodeId || x.target.id == rootNodeId)
+      .map((x: any) => x.source.id == rootNodeId ? x.target.id : x.source.id);
+  }
+
 
 }

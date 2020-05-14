@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {ArtifactImageService} from "../../artifact-map/shared/artifact-image.service";
 import {ScaleBand, ScaleLogarithmic} from "d3-scale";
 import * as d3 from 'd3';
@@ -12,13 +12,10 @@ import {BrushBehavior} from "d3-brush";
   styleUrls: ['./temporal-bar-chart.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class TemporalBarChartComponent implements OnInit {
+export class TemporalBarChartComponent implements OnInit, AfterViewInit {
 
   @Input() showDescription: boolean = true;
-  @Input() chartId: string;
-
   private data: Artifact[];
-  private initialized: boolean = false;
   private t = d3.transition().duration(750);
   private x: ScaleBand<string>;
   private y: ScaleLogarithmic<number, number>;
@@ -27,6 +24,7 @@ export class TemporalBarChartComponent implements OnInit {
   private filterId: string = "TEMPORAL_CHART_FILTER";
   private width: number;
   private height: number;
+  private margin;
   private chart: Selection<any, any, any, any>;
   private colorRange = Array.from(d3.schemeSpectral[11].entries()).map(value => value[1]);
   // @ts-ignore
@@ -35,16 +33,23 @@ export class TemporalBarChartComponent implements OnInit {
   private brushSelectionIndexTo:number;
 
   constructor(private artifactImagesService: ArtifactImageService) {
+
+    this.margin = {top: 20, right: 30, bottom: 30, left: 40};
+    let widthToUse = window.screen.width >= 500 ? 500 : window.screen.width;
+    this.width = widthToUse - this.margin.left - this.margin.right;
+    this.height = 150 - this.margin.top - this.margin.bottom;
   }
 
+  ngAfterViewInit(): void {
+    }
+
   ngOnInit() {
-    let subscription = this.artifactImagesService.artifactData$.subscribe(data => {
+    this.artifactImagesService.artifactData$.subscribe(data => {
       this.data = data;
       this.yearBuckets = this.createYearBuckets(data);
       this.initBarChart(this.yearBuckets);
       this.updateBarChart(this.yearBuckets);
       this.initBrush();
-      subscription.unsubscribe();
     });
 
     this.artifactImagesService.filters$.subscribe(filterChangeEvent => {
@@ -61,19 +66,8 @@ export class TemporalBarChartComponent implements OnInit {
     });
   }
 
-  private initialize(data: [number, number][]) {
-    this.initBarChart(data);
-    this.updateBarChart(data);
-    this.initBrush();
-
-    this.initialized = true;
-  }
-
-
   private initBarChart(data: [number, number][]) {
-    let margin = {top: 20, right: 30, bottom: 30, left: 40};
-    this.width = 500 - margin.left - margin.right;
-    this.height = 150 - margin.top - margin.bottom;
+
     this.x = d3.scaleBand().rangeRound([0, this.width]).padding(0.1);
     this.y = d3.scaleLog().range([this.height, 0]).base(2);
 
@@ -91,16 +85,17 @@ export class TemporalBarChartComponent implements OnInit {
       return num.toString();
     });
 
-    this.chart = d3.select("#"+this.chartId)
-      .attr("width", this.width + margin.left + margin.right)
-      .attr("height", this.height + margin.top + margin.bottom)
+
+    this.chart = d3.select(".bottomTempChart")
+      .attr("width", this.width + this.margin.left + this.margin.right)
+      .attr("height", this.height + this.margin.top + this.margin.bottom)
       .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+      .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
 
     this.x.domain(data.map(d => d[0].toString()));
     this.y.domain([0.4, d3.max(data, d => d[1])]);
 
-    this.chart.append("g")
+    let bla = this.chart.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + this.height + ")")
       .call(xAxis);
@@ -109,14 +104,10 @@ export class TemporalBarChartComponent implements OnInit {
       .attr("class", "y axis")
       .call(yAxis);
 
-
-    // this.artifactImagesService.clearFilterNotify$.subscribe(value => {
-    //   this.clearFilter();
-    // });
-
   }
 
   private updateBarChart(data: [number, number][]) {
+
 
     // data = data.filter(value => value[1] > 0);
 

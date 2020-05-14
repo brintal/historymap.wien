@@ -25,7 +25,7 @@ public interface ArtifactRepository extends JpaRepository<Artifact, Integer>, Jp
     List<Artifact> findAllWithLocation();
 
     @Cacheable("artifacts")
-    List<Artifact> findAllByLocationIsNotNullAndYearIsNotNull();
+    List<Artifact> findAllByLocationIsNotNullAndYearIsNotNullOrderByYear();
 
     List<Artifact> findAllByLocationIsNotNullAndTechniqueIsNotNullAndYearIsNotNull();
 

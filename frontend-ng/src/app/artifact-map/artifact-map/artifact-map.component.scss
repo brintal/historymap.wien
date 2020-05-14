@@ -1,25 +1,57 @@
-/*agm-map {*/
-/*height: 600px;*/
-/*}*/
-//.sidenav-container {
-//  height: 100vh;
-//  box-sizing: border-box;
-//}
-//
 #mapHolder {
-  height: 80vh;
+  height: 100%;
   box-sizing: border-box;
+  overflow-y: hidden;
 }
+
+.sidenav-container {
+  height: calc(100% - 81px);
+  box-sizing: border-box;
+  overflow-y: hidden;
+}
+
 #mapid {
   height: 100%;
   //box-sizing: border-box;
 }
-#bottomTemporalChart {
+
+.mat-drawer-content {
+  overflow: hidden!important;
+}
+
+
+#bottomSlider {
   border-radius: 0px 10px 0px 0px;
   position: absolute;
   bottom: 0;
   background-color: rgba(0, 0, 0, .2);
-  z-index: 9999999999999999999999999999;
+  z-index: 999999999999;
+  -webkit-transition: 300ms all ease-in-out;
+  -webkit-transform: translate3d(0, +100%, 0);
+}
+
+.bottomSliderButtonHolder {
+  position: relative;
+  height: 0px;
+}
+
+.bottomSliderButton {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+}
+#bottomTemporalChart {
+
+}
+
+.slideIn {
+  -webkit-transform: translate3d(0, 0, 0) !important;
+}
+
+@media only screen and (max-width: 500px) {
+  #bottomSlider {
+    border-radius: 0px 0px 0px 0px;
+  }
 }
 
 #buttonRow {
@@ -39,17 +71,37 @@ h3 {
   margin-left: 10px;
 }
 
+#matSideBarContainer {
+}
+
+#sidebarExpansionPanelHolder {
+}
+
 #sidenavButton {
   margin-right: 20px;
   margin-left: 10px;
 }
 
 #closeButtonRow {
-  margin: 10px;
+  width:100%;
+}
+#sideNavCloseButton {
+  position: absolute;
+  right: 15px;
+  top: 5px;
+}
+#sideClearFiltersButton {
+  background-color: dimgrey;
+  color: white;
+  position: absolute;
+  left: 5px;
+  top: 5px;
 }
 
 .leaflet-popup-content {
   width: auto !important;
+  margin-left: 0px;
+  margin-right: 0px;
 }
 
 .leaflet-popup-tip-container {
@@ -61,27 +113,27 @@ h3 {
 }
 
 .marker-cluster-large div {
-  background-color: rgba(251, 192, 45, 0.90);
+  background-color: rgba(255, 214, 0, 0.91);
 }
 
 .marker-cluster-large {
-  background-color: rgba(251, 192, 45, 0.70);
+  background-color: rgba(255, 214, 0, 0.5);
 }
 
 .marker-cluster-medium div {
-  background-color: rgba(255, 235, 59, 0.9);
+  background-color: rgba(255, 255, 0, 0.91);
 }
 
 .marker-cluster-medium {
-  background-color: rgba(255, 235, 59, 0.7);
+  background-color: rgba(255, 255, 0, 0.5);
 }
 
 .marker-cluster-small div {
-  background-color: rgba(255, 245, 157, 0.9);
+  background-color: rgba(255, 255, 141, 0.91);
 }
 
 .marker-cluster-small {
-  background-color: rgba(255, 245, 157, 0.7);
+  background-color: rgba(255, 255, 141, 0.51);
 }
 
 
@@ -107,7 +159,7 @@ h3 {
 }
 
 .crop {
-  width: 300px;
+  width: 220px;
   height: 300px;
   overflow: hidden;
 }

@@ -1,7 +1,7 @@
-import {AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ArtifactImageService} from "../shared/artifact-image.service";
 import * as L from 'leaflet';
-import {Circle, LatLng} from 'leaflet';
+import {Circle, LatLng, Marker} from 'leaflet';
 import 'leaflet.markercluster';
 import {EndpointSettings} from "../../shared/endpoint-settings";
 import {Artifact, Technique} from "../../shared/generated/domain";
@@ -25,7 +25,10 @@ export class ArtifactMapComponent implements AfterViewInit {
 
   private map: L.Map;
   private markers: L.MarkerClusterGroup;
+  private markerLocationsMap: Map<string, Marker[]> = new Map<string, Marker[]>();
+  private markerArtifactsMap: Map<number, Marker> = new Map<number, Marker>();
   private data: Artifact[];
+  slidedIn: boolean = false;
 
   selectedPeriod: [number, number] = [0, 2000];
   selectedOverlay = 'none';
@@ -68,11 +71,14 @@ export class ArtifactMapComponent implements AfterViewInit {
         self.snav.toggle();
       }
       , 2000);
-
-    this.artifactImagesService.clearFilterNotify$.subscribe(value => {
-      this.selectedOverlay = 'none';
-      this.onOverlayChange();
-    })
+    setTimeout(function () {
+        self.slidedIn = true;
+      }
+      , 1000);
+    // setTimeout(function () {
+    //     self.slidedIn = false;
+    //   }
+    //   , 6000);
 
   }
 
@@ -114,11 +120,22 @@ export class ArtifactMapComponent implements AfterViewInit {
   private loadDataToMap() {
     this.artifactImagesService.artifactData$.subscribe((data => {
       this.data = data;
-      if (this.markers) {
-        this.markers.clearLayers();
-      }
       this.createClusters(data);
     }));
+
+    this.artifactImagesService.filters$.subscribe(filterChangeEvent => {
+      let filteredData: Artifact[] = [];
+      this.data.forEach(artifact => {
+        filteredData.push(artifact);
+      })
+      for (var filter of filterChangeEvent.filters) {
+        filteredData = filteredData.filter(filter.filterFunction);
+      }
+      this.markerLocationsMap = new Map<string, Marker[]>();
+      this.markerArtifactsMap = new Map<number, Marker>();
+      this.markers.clearLayers();
+      this.createClusters(filteredData);
+    })
   }
 
 
@@ -143,6 +160,12 @@ export class ArtifactMapComponent implements AfterViewInit {
       this.map.setView(targetLatLng, this.map.getZoom());
       // this.map.setView(marker.getLatLng(), this.map.getZoom());
     });
+    this.markerArtifactsMap.set(artifact.id, marker);
+    let locationKey = `${artifact.location.latitude}:${artifact.location.longitude}`;
+    if (!this.markerLocationsMap.has(locationKey)) {
+      this.markerLocationsMap.set(locationKey, []);
+    }
+    this.markerLocationsMap.get(locationKey).push(marker);
     return marker;
   }
 
@@ -150,16 +173,17 @@ export class ArtifactMapComponent implements AfterViewInit {
   private createPopup(artifact: Artifact) {
     const popupEl: NgElement & WithProperties<ArtifactMapPopupComponent> = document.createElement('popup-element') as any;
     popupEl.artifact = artifact;
-//     let el = document.createElement('div');
-//       el.innerHTML =
-//         `<p>${artifact.title} (${artifact.year})</p>` +
-//         `
-// <!-- <a href='${EndpointSettings.API_ENDPOINT}pictureStore/${artifact.onbImageId}/${artifact.onbImageId}.jpg' target='_blank'>-->
-//           <div class="crop" onclick="alert('blaaa')">
-//            <img src='${EndpointSettings.API_ENDPOINT}pictureStore/${artifact.onbImageId}/medium/${artifact.onbImageId}.jpg'/>
-//           </div>
-// <!--         </a>-->
-// `;
+
+    let currentMarker = this.markerArtifactsMap.get(artifact.id);
+    let locationKey = `${artifact.location.latitude}:${artifact.location.longitude}`;
+    let markersOnLocation = this.markerLocationsMap.get(locationKey);
+    if (markersOnLocation.length > 1) {
+      let currentArtifactIndex = markersOnLocation.indexOf(currentMarker);
+      popupEl.previousMarker = currentArtifactIndex >= 1 ? markersOnLocation[currentArtifactIndex-1] : markersOnLocation[markersOnLocation.length-1];
+      popupEl.nextMarker = currentArtifactIndex < (markersOnLocation.length-1) ? markersOnLocation[currentArtifactIndex+1] : markersOnLocation[0];
+    }
+
+
     return popupEl;
   }
 
@@ -339,5 +363,9 @@ export class ArtifactMapComponent implements AfterViewInit {
 
   clearFilters() {
     this.artifactImagesService.clearFilters();
+  }
+
+  toggleSlider() {
+    this.slidedIn = !this.slidedIn;
   }
 }

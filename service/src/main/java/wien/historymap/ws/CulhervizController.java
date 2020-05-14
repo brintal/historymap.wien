@@ -1,6 +1,5 @@
 package wien.historymap.ws;
 
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
@@ -58,7 +57,7 @@ public class CulhervizController {
     @EventListener(ApplicationReadyEvent.class)
     public void init(){
         log.info("starting preloading artifacts");
-        List<Artifact> artifacts = artifactRepository.findAllByLocationIsNotNullAndYearIsNotNull();
+        List<Artifact> artifacts = artifactRepository.findAllByLocationIsNotNullAndYearIsNotNullOrderByYear();
         log.info("preloaded "+artifacts.size()+" artifacts info cache");
     }
 
@@ -66,7 +65,7 @@ public class CulhervizController {
     public List<Artifact> artifacts() {
 
         log.info("get All Artifacts called");
-        List<Artifact> toRet = artifactRepository.findAllByLocationIsNotNullAndYearIsNotNull();
+        List<Artifact> toRet = artifactRepository.findAllByLocationIsNotNullAndYearIsNotNullOrderByYear();
 //        List<Artifact> toRet = artifactRepository.findAllByLocationIsNotNullAndTechniqueIsNotNullAndYearIsNotNull();
 //        List<SimpleArtifact> toRet = artifactRepository.findAllByLocationIsNotNullAndYearBetween(1970, 2000);
 

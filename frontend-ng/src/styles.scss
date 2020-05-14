@@ -9,11 +9,33 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 
 .infoIcon {
-  color: #ff5722;
+  color: #ffd600;
+  cursor: help;
   //font-weight: bolder;
   margin-left: 10px;
   margin-top: 10px;
+
+  webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
 }
+
+.mat-tab-link-container {
+  height: 30px;
+}
+
+.mat-tab-link {
+  height: 30px!important;
+}
+
+.mat-toolbar-row, .mat-toolbar-single-row {
+  height: 50px!important;
+}
+
 
 .warningIcon {
   color: red;

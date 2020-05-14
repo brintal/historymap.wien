@@ -1,5 +1,23 @@
-<p>{{artifact.title}} ({{artifact.year}})</p>
-<div class="crop detailsLink" (click)="openDetails()">
+
+<div id="artifactPopupDescription">
+  <p>{{artifact.title}} ({{artifact.year}})</p>
+</div>
+<div id="artifactImageWrapper" class="crop detailsLink" (click)="openDetails()">
   <img src="{{getImageSrc()}}" alt="artifact image"/>
 </div>
-<p class="detailsLink" (click)="openDetails()">click for details</p>
+<div id="wrapper">
+  <div *ngIf="previousMarker" id="leftButton">
+    <button class="popupNavButton" mat-icon-button color="accent" (click)="previous()">
+      <mat-icon>keyboard_arrow_left</mat-icon>
+    </button>
+  </div>
+  <div id="detailsLinkWrapper">
+    <p class="detailsLink" (click)="openDetails()">click for details</p>
+  </div>
+  <div *ngIf="nextMarker" id="rightButton">
+    <button class="popupNavButton" mat-icon-button color="accent" (click)="next()">
+      <mat-icon>keyboard_arrow_right</mat-icon>
+    </button>
+  </div>
+</div>
+

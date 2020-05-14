@@ -3,6 +3,7 @@ import {Artifact} from "../../shared/generated/domain";
 import {EndpointSettings} from "../../shared/endpoint-settings";
 import {ArtifactDetailsComponent} from "../../artifact-management/artifact-details/artifact-details.component";
 import {MatDialog} from "@angular/material/dialog";
+import {Marker} from "leaflet";
 
 @Component({
   selector: 'app-artifact-map-popup',
@@ -12,6 +13,8 @@ import {MatDialog} from "@angular/material/dialog";
 export class ArtifactMapPopupComponent implements OnInit {
 
   @Input() artifact: Artifact;
+  @Input() nextMarker: Marker;
+  @Input() previousMarker: Marker;
 
   constructor(
     private _dialog: MatDialog) {
@@ -31,4 +34,14 @@ export class ArtifactMapPopupComponent implements OnInit {
       minWidth: '80vw'
     });
   }
+
+  public next() {
+    this.nextMarker.fire('click');
+  }
+
+  public previous() {
+    this.previousMarker.fire('click');
+  }
+
+
 }

@@ -9,13 +9,29 @@
 }
 
 .currentSelectedAuthor {
-  fill: #ffeb3b !important;
+  fill: #ffd600 !important;
   stroke: black !important;
   stroke-width: 2px!important;
 }
 .mouseovernode {
-  fill: #ffab91 !important;
+  fill: #fbc02d !important;
 }
 .mouseovernodegroup {
-  fill: #ffab91 !important;
+  fill: #fbc02d !important;
+}
+
+.mouseovertext {
+  font-size: 15px !important;
+  fill: black !important;
+}
+
+.unavailableLink {
+  stroke: #E3E3E3 !important;
+}
+
+.unavailableNode {
+  stroke: #e3e3e3 !important;
+  fill: #ececec !important;
+  cursor: auto !important;
+  pointer-events: none;
 }

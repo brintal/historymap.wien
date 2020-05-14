@@ -1,4 +1,4 @@
-<mat-icon class="infoIcon" matTooltip="This Chart shows the authors with most the most artifacts in the collection. The bigger the circle, the more artifacts were created by the author. Authors with less than 5 artifacts are combined as 'Others'">info_outline</mat-icon><br/>
+<mat-icon class="infoIcon" matTooltip="This Chart shows the authors with the most artifacts in the collection. The bigger the circle, the more artifacts were created by the author. Authors with less than 5 artifacts are combined as 'Others'. Use the search field to search for a specific author on the chart." #tooltip="matTooltip" (click)="tooltip.toggle()">info</mat-icon><br/>
 <form>
   <mat-form-field class="search-form">
     <input type="text"

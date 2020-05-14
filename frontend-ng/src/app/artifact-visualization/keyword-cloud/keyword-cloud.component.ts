@@ -28,10 +28,9 @@ export class KeywordCloudComponent implements OnInit {
 
   ngOnInit(): void {
 
-    let subscription = this.artifactImagesService.artifactData$.subscribe(data => {
+    this.artifactImagesService.artifactData$.subscribe(data => {
       this.data = data;
       this.initCloud(data);
-      subscription.unsubscribe();
     });
 
     this.artifactImagesService.filters$.subscribe(filterChangeEvent => {

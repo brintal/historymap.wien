@@ -45,6 +45,7 @@ import { FilterOverviewComponent } from './artifact-map/filter-overview/filter-o
 import {MatChipsModule} from "@angular/material/chips";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import 'hammerjs';
 
 const globalRippleConfig: RippleGlobalOptions = {
   disabled: false
