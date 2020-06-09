@@ -1,9 +1,12 @@
 <div class="example-container">
   <div [hidden]="initialized" class="spinner-div">
-    <mat-spinner></mat-spinner>
+    <div>
+      <mat-spinner></mat-spinner>
+      <div class="spinner-div-text">Please wait</div>
+    </div>
   </div>
   <div [hidden]="!initialized">
-    <mat-form-field>
+    <mat-form-field class="search-form">
       <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
     </mat-form-field>
 
@@ -40,6 +43,16 @@
         <ng-container matColumnDef="latitude">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Latitude</th>
           <td mat-cell *matCellDef="let row">{{row.location.latitude}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="authors">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Authors</th>
+          <td mat-cell *matCellDef="let row">{{getAuthorsString(row.authors)}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="district">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>District</th>
+          <td mat-cell *matCellDef="let row">{{row.district}}</td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

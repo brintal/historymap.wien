@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ArtifactImageService} from "../shared/artifact-image.service";
 import * as L from 'leaflet';
-import {Circle, LatLng, Marker} from 'leaflet';
+import {Circle, icon, LatLng, Marker} from 'leaflet';
 import 'leaflet.markercluster';
 import {EndpointSettings} from "../../shared/endpoint-settings";
 import {Artifact, Technique} from "../../shared/generated/domain";
@@ -9,7 +9,7 @@ import {NgElement, WithProperties} from '@angular/elements';
 import {ArtifactMapPopupComponent} from "../artifact-map-popup/artifact-map-popup.component";
 import * as d3 from "d3";
 import Point = L.Point;
-
+import {ColorHelper} from "../../shared/color-helper";
 
 @Component({
   selector: 'app-artifact-map',
@@ -28,6 +28,7 @@ export class ArtifactMapComponent implements AfterViewInit {
   private markerLocationsMap: Map<string, Marker[]> = new Map<string, Marker[]>();
   private markerArtifactsMap: Map<number, Marker> = new Map<number, Marker>();
   private data: Artifact[];
+  initialized: boolean = false;
   slidedIn: boolean = false;
 
   selectedPeriod: [number, number] = [0, 2000];
@@ -50,6 +51,7 @@ export class ArtifactMapComponent implements AfterViewInit {
     if (this.map != null) {
       this.map.remove();
     }
+    this.fixDefaultIcons();
     this.map = L.map('mapid', {attributionControl: false});
     this.map.setView([48.208043, 16.368739], 13);
 
@@ -62,24 +64,25 @@ export class ArtifactMapComponent implements AfterViewInit {
     this.luftbild1956MapLayer = ArtifactMapComponent.createluftbild1956MapLayer();
 
     this.loadDataToMap();
-    var self = this;
-    setTimeout(function () {
-        self.snav.toggle();
-      }
-      , 1000);
-    setTimeout(function () {
-        self.snav.toggle();
-      }
-      , 2000);
-    setTimeout(function () {
-        self.slidedIn = true;
-      }
-      , 1000);
-    // setTimeout(function () {
-    //     self.slidedIn = false;
-    //   }
-    //   , 6000);
 
+
+  }
+
+  private fixDefaultIcons() {
+    const iconRetinaUrl = 'assets/marker-icon-2x.png';
+    const iconUrl = 'assets/marker-icon.png';
+    const shadowUrl = 'assets/marker-shadow.png';
+    const iconDefault = icon({
+      iconRetinaUrl,
+      iconUrl,
+      shadowUrl,
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      tooltipAnchor: [16, -28],
+      shadowSize: [41, 41]
+    });
+    Marker.prototype.options.icon = iconDefault;
   }
 
   private initLocation() {
@@ -121,6 +124,20 @@ export class ArtifactMapComponent implements AfterViewInit {
     this.artifactImagesService.artifactData$.subscribe((data => {
       this.data = data;
       this.createClusters(data);
+      this.initialized = true;
+      var self = this;
+      setTimeout(function () {
+          self.snav.toggle();
+        }
+        , 1000);
+      setTimeout(function () {
+          self.snav.toggle();
+        }
+        , 2000);
+      setTimeout(function () {
+          self.slidedIn = true;
+        }
+        , 1000);
     }));
 
     this.artifactImagesService.filters$.subscribe(filterChangeEvent => {
@@ -271,15 +288,13 @@ export class ArtifactMapComponent implements AfterViewInit {
   }
 
   private static createDivIcon(artifact: Artifact): L.DivIcon {
-    var colorRange = Array.from(d3.schemeSpectral[11].entries()).map(value => value[1]);
-    // @ts-ignore
-    let color = d3.scaleLinear().range(colorRange).domain([1650, 1700, 1750, 1775, 1800, 1825, 1850, 1875, 1900, 1950, 1990]);
-    let yearColor = color(artifact.year);
+    let yearColor = ColorHelper.getColorForYear(artifact.year);
     return new L.DivIcon({
       className: 'my-div-icon',
       iconAnchor: [12, 21],
-      popupAnchor: [5, -17],
-      html: `<span class='icon-div-badge'>&nbsp${this.getBadgeIconForTechnique(artifact.technique)}&nbsp</span>` +
+      popupAnchor: [7, -17],
+      html:
+        // `<span class='icon-div-badge'>&nbsp${this.getBadgeIconForTechnique(artifact.technique)}&nbsp</span>` +
         `<img class='icon-div-image' style='border-color:${yearColor}' src='/pictureStore/${artifact.onbImageId}/iconWithoutBorder/${artifact.onbImageId}.jpg'/>`
 
     });

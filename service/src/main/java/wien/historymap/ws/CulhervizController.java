@@ -5,6 +5,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -57,20 +58,21 @@ public class CulhervizController {
     @EventListener(ApplicationReadyEvent.class)
     public void init(){
         log.info("starting preloading artifacts");
-        List<Artifact> artifacts = artifactRepository.findAllByLocationIsNotNullAndYearIsNotNullOrderByYear();
+        List<Artifact> artifacts = self.artifacts();
         log.info("preloaded "+artifacts.size()+" artifacts info cache");
     }
 
     @RequestMapping("/artifacts")
     public List<Artifact> artifacts() {
-
         log.info("get All Artifacts called");
-        List<Artifact> toRet = artifactRepository.findAllByLocationIsNotNullAndYearIsNotNullOrderByYear();
+        return self.cacheableArtifacts();
 //        List<Artifact> toRet = artifactRepository.findAllByLocationIsNotNullAndTechniqueIsNotNullAndYearIsNotNull();
 //        List<SimpleArtifact> toRet = artifactRepository.findAllByLocationIsNotNullAndYearBetween(1970, 2000);
+    }
 
-        return toRet;
-
+    @Cacheable("artifacts")
+    public List<Artifact> cacheableArtifacts() {
+        return artifactRepository.findAllByLocationIsNotNullAndYearIsNotNullOrderByYear();
     }
 
     @RequestMapping(value = REQUEST_MAPPING_GET_ARTIFACT_IMAGE, method = RequestMethod.GET)

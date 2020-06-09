@@ -1,11 +1,18 @@
+<div [hidden]="initialized" class="spinner-div">
+  <div>
+    <mat-spinner></mat-spinner>
+    <div class="spinner-div-text">Please wait</div>
+  </div>
+</div>
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #snav mode="side" fixedTopGap="56" position="end">
     <div id="matSideBarContainer">
       <div id="closeButtonRow">
-        <button #snavbutton id="sideNavCloseButton" mat-mini-fab color="accent" (click)="toggleSidebar();" >
+        <button #snavbutton id="sideNavCloseButton" mat-raised-button color="accent" (click)="toggleSidebar();">
+          Hide Panel
           <mat-icon>arrow_forward</mat-icon>
         </button>
-        <button id="sideClearFiltersButton" mat-raised-button (click)="clearFilters();" >Clear Filters
+        <button id="sideClearFiltersButton" mat-raised-button (click)="clearFilters();">Clear Filters
           <mat-icon>delete</mat-icon>
         </button>
       </div>
@@ -25,7 +32,8 @@
           </mat-expansion-panel-header>
           <div class="overlaySelect">
             <mat-icon class="infoIcon"
-                      matTooltip="Select here which historic map should be displayed on the map. Please keep in mind that old maps normally only cover the center of the city." #tooltip="matTooltip" (click)="tooltip.toggle()">
+                      matTooltip="Select here which historic map should be displayed on the map. Please keep in mind that old maps normally only cover the center of the city."
+                      #tooltip="matTooltip" (click)="tooltip.toggle()">
               info
             </mat-icon>
             <br/>

@@ -6,8 +6,8 @@
   <img src="{{getImageSrc()}}" alt="artifact image"/>
 </div>
 <div id="wrapper">
-  <div *ngIf="previousMarker" id="leftButton">
-    <button class="popupNavButton" mat-icon-button color="accent" (click)="previous()">
+  <div *ngIf="previousMarker" id="leftButton"  >
+    <button class="popupNavButton" mat-icon-button color="accent" (click)="previous()" matTooltip="show previous image at this location">
       <mat-icon>keyboard_arrow_left</mat-icon>
     </button>
   </div>
@@ -15,7 +15,7 @@
     <p class="detailsLink" (click)="openDetails()">click for details</p>
   </div>
   <div *ngIf="nextMarker" id="rightButton">
-    <button class="popupNavButton" mat-icon-button color="accent" (click)="next()">
+    <button class="popupNavButton" mat-icon-button color="accent" (click)="next()" matTooltip="show next image at this location" >
       <mat-icon>keyboard_arrow_right</mat-icon>
     </button>
   </div>

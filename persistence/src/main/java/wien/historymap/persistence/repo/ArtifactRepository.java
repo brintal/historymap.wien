@@ -24,7 +24,6 @@ public interface ArtifactRepository extends JpaRepository<Artifact, Integer>, Jp
     @Query("select a from Artifact a where a.location is not null")
     List<Artifact> findAllWithLocation();
 
-    @Cacheable("artifacts")
     List<Artifact> findAllByLocationIsNotNullAndYearIsNotNullOrderByYear();
 
     List<Artifact> findAllByLocationIsNotNullAndTechniqueIsNotNullAndYearIsNotNull();

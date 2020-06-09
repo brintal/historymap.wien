@@ -4,7 +4,7 @@ import {MatSort} from '@angular/material/sort';
 import {MatTable, MatTableDataSource} from '@angular/material/table';
 import {MatBottomSheet} from "@angular/material/bottom-sheet";
 import {ArtifactImagePopupComponent} from "../artifact-image-popup/artifact-image-popup.component";
-import {Artifact} from "../../shared/generated/domain";
+import {Artifact, Person} from "../../shared/generated/domain";
 import {MatDialog} from "@angular/material/dialog";
 import {ArtifactDetailsComponent} from "../artifact-details/artifact-details.component";
 import {ArtifactImageService} from "../../artifact-map/shared/artifact-image.service";
@@ -22,7 +22,7 @@ export class ArtifactTableComponent implements AfterViewInit, OnInit {
   initialized: boolean = false;
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = ['icon', 'id', 'title', 'year', 'longitude', 'latitude'];
+  displayedColumns = ['icon', 'id', 'title', 'year', 'district', 'authors', 'longitude', 'latitude'];
 
   constructor(private artifactImageService: ArtifactImageService,
               private _bottomSheet: MatBottomSheet,
@@ -39,6 +39,10 @@ export class ArtifactTableComponent implements AfterViewInit, OnInit {
 
   }
 
+  public getAuthorsString(authors: Person[]): string {
+    return authors.map(value => value.name).join(', ');
+  }
+
   ngAfterViewInit() {
   }
 
@@ -51,9 +55,11 @@ export class ArtifactTableComponent implements AfterViewInit, OnInit {
   }
 
   openDetails(artifact: Artifact) {
+    history.pushState({}, "", "/list#");
     const dialogRef = this._dialog.open(ArtifactDetailsComponent, {
       data: artifact,
-      maxHeight: '90vh'
+      maxHeight: '90vh',
+      closeOnNavigation: true
     });
   }
 }

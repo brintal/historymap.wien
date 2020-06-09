@@ -55,7 +55,7 @@ public class LocationParserImpl implements LocationParser {
 
             if (results.length == 1) {
                 log.debug("Address found for " + artifact.getOnbImageId() + ": " + results[0].formattedAddress + " | raw address: " + address);
-                return handleSingeResult(artifact, results[0]);
+                return handleSingleResult(artifact, results[0]);
             }
             if (results.length > 1) {
                 return handleMultiResult(artifact, results);
@@ -64,22 +64,20 @@ public class LocationParserImpl implements LocationParser {
         } catch (Exception e) {
             log.debug(e.getMessage() + " | " + artifact.getOnbImageId());
             return null;
-//            e.printStackTrace();
         }
         throw new NoResultsException();
     }
 
-    private Location handleMultiResult(Artifact artifact, GeocodingResult[] results) throws Exception {
+    private Location handleMultiResult(Artifact artifact, GeocodingResult[] results) {
         List<GeocodingResult> correctPostalCode = Arrays.stream(results)
                 .filter(geocodingResult -> containsPostalCode(getFormattedPostalCode(artifact.getDistrict()), geocodingResult))
                 .collect(Collectors.toList());
 
-        if (correctPostalCode.size() == 1)
+        if (correctPostalCode.size() == 1) {
             return createAndSaveLocation(correctPostalCode.get(0));
+        } else if (correctPostalCode.size() > 1) {
 
-        else if (correctPostalCode.size() > 1) {
-
-            Double maxDistance = 0D;
+            double maxDistance = 0D;
 
             for (int i = 0; i < correctPostalCode.size(); i++) {
                 for (int j = i + 1; j < correctPostalCode.size(); j++) {
@@ -99,10 +97,7 @@ public class LocationParserImpl implements LocationParser {
                 return createAndSaveLocation(correctPostalCode.get(0));
             }
         }
-
-        throw new IllegalArgumentException("no correct postalcode or too many matches"); //TODO if they are all close together, return middle location
-
-
+        throw new IllegalArgumentException("no correct postalcode or too many matches");
     }
 
     private Boolean containsPostalCode(String postalCode, GeocodingResult result) {
@@ -118,7 +113,7 @@ public class LocationParserImpl implements LocationParser {
     }
 
 
-    private Location handleSingeResult(Artifact artifact, GeocodingResult result) throws Exception {
+    private Location handleSingleResult(Artifact artifact, GeocodingResult result) throws Exception {
         String postalCode = extractPostalCodeFromResult(result);
 
         if (postalCode.equals(getFormattedPostalCode(artifact.getDistrict()))) {

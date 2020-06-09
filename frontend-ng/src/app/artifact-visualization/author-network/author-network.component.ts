@@ -190,7 +190,7 @@ export class AuthorNetworkComponent implements OnInit {
       .attr('r', 8)
       .attr("id", value => 'author' + value.id)
       // @ts-ignore
-      .attr('fill', "#fff59d")
+      .attr('fill', "#fff2c1")
       .style("visibility", "hidden")
       .on('click', author => this.addAuthorFilter(author.id));
 

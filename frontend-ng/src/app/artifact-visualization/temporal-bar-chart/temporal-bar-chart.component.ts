@@ -5,6 +5,7 @@ import * as d3 from 'd3';
 import {Artifact} from "../../shared/generated/domain";
 import {Selection} from "d3-selection";
 import {BrushBehavior} from "d3-brush";
+import {ColorHelper} from "../../shared/color-helper";
 
 @Component({
   selector: 'app-temporal-bar-chart',
@@ -26,9 +27,6 @@ export class TemporalBarChartComponent implements OnInit, AfterViewInit {
   private height: number;
   private margin;
   private chart: Selection<any, any, any, any>;
-  private colorRange = Array.from(d3.schemeSpectral[11].entries()).map(value => value[1]);
-  // @ts-ignore
-  private color = d3.scaleLinear().range(this.colorRange).domain([1650, 1700, 1750, 1775, 1800, 1825, 1850, 1875, 1900, 1950, 1990]);
   private brushSelectionIndexFrom:number;
   private brushSelectionIndexTo:number;
 
@@ -125,7 +123,7 @@ export class TemporalBarChartComponent implements OnInit, AfterViewInit {
     rects
       .enter().append("rect")
       .attr("class", "bar")
-      .attr("fill",d => this.color(d[0].toString()))
+      .attr("fill",d => ColorHelper.getColorForYear((d[0])))
       .attr("x", d => this.x(d[0].toString()))
       .attr("y", 0)
       .attr("height", 0)
@@ -158,8 +156,8 @@ export class TemporalBarChartComponent implements OnInit, AfterViewInit {
 
       let index1 = Math.round((d3.event.selection[0] / this.x.step())) - 1;
       let index2 = Math.round((d3.event.selection[1] / this.x.step())) - 1;
-      let val1 = this.x.domain()[index1] || 0;
-      let val2 = this.x.domain()[index2] || 2000;
+      let val1:number = +this.x.domain()[index1] || 0;
+      let val2:number = +this.x.domain()[index2] || 2000;
 
       if (this.brushSelectionIndexFrom != null
         && this.brushSelectionIndexTo != null
@@ -169,8 +167,10 @@ export class TemporalBarChartComponent implements OnInit, AfterViewInit {
       this.brushSelectionIndexFrom = index1;
       this.brushSelectionIndexTo = index2;
 
+      let minBrush = this.x(Math.max(val1, 1650).toString());
+      let maxBrush = isNaN(this.x(val2.toString())) ? this.x('1990')+this.x.bandwidth() : this.x(val2.toString());
       // @ts-ignore
-      this.chart.select(".brush").transition(this.t).call(this.brush.move, [this.x(val1.toString()), this.x(val2.toString())]);
+      this.chart.select(".brush").transition(this.t).call(this.brush.move, [minBrush, maxBrush]);
       this.artifactImagesService.addFilterById(
         this.filterId,
           `Time: ${val1}-${val2}`,

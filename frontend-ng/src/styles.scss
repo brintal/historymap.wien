@@ -9,7 +9,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 
 .infoIcon {
-  color: #ffd600;
+  color: #4caf50;
   cursor: help;
   //font-weight: bolder;
   margin-left: 10px;
@@ -46,6 +46,18 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .mat-chip.mat-standard-chip {
   background-color: dimgrey !important;
   color: white !important;
+}
+
+.spinner-div {
+  z-index: 10;
+  position:fixed;
+  top: 50%;
+  left: calc(50% - 50px);
+}
+
+.spinner-div-text {
+  font-size: 12px;
+  position:relative; top: -58px; left: 20px;
 }
 
 //.cdk-global-overlay-wrapper {

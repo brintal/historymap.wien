@@ -28,10 +28,12 @@ export class ArtifactMapPopupComponent implements OnInit {
   }
 
   public openDetails() {
+    history.pushState({}, "", "/map#");
     const dialogRef = this._dialog.open(ArtifactDetailsComponent, {
       data: this.artifact,
       maxHeight: '90vh',
-      minWidth: '80vw'
+      minWidth: '80vw',
+      closeOnNavigation: true
     });
   }
 
