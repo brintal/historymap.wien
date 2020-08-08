@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.event.EventListener;
@@ -49,6 +50,9 @@ public class CulhervizController {
 
     @Autowired
     CulhervizController self;
+
+    @Value("${google.apikey}")
+    private String googleApiKey;
 
     private static final String DOWNLOAD_PATH = "/pictureStore/";
     private static final String ICON_PATH = "D:/Dev/";
@@ -167,4 +171,8 @@ public class CulhervizController {
         return keywordRepository.findAllKeywordSummary();
     }
 
+    @RequestMapping(value = "/apikey", method = RequestMethod.GET)
+    public String getApiKey() {
+        return googleApiKey;
+    }
 }

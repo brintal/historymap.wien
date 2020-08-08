@@ -21,6 +21,10 @@ export class AppComponent implements OnInit{
         label: 'List',
         link: './list',
         index: 1
+      }, {
+        label: 'About',
+        link: './about',
+        index: 2
       }
     ];
   }

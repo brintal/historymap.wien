@@ -84,4 +84,5 @@ export class ArtifactImageService {
     this.clearFilterNotifySubject.next();
     this.publish(null);
   }
+
 }

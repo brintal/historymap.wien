@@ -6,14 +6,10 @@ spring:
   resources:
     static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/webapp/,classpath:/public/,file:/home/brin/Dev/random/pictureStore
 
-
-
-
 logging:
   level:
       org.springframework.web: INFO
       org.hibernate: ERROR
       wien.historymap: DEBUG
-
 
 google.apikey: XXX

@@ -46,6 +46,7 @@ import {MatChipsModule} from "@angular/material/chips";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import 'hammerjs';
+import { AboutComponent } from './about/about.component';
 
 const globalRippleConfig: RippleGlobalOptions = {
   disabled: false
@@ -67,7 +68,8 @@ const globalRippleConfig: RippleGlobalOptions = {
     AuthorNetworkComponent,
     ImagePreloaderComponent,
     AuthorBubblesComponent,
-    FilterOverviewComponent
+    FilterOverviewComponent,
+    AboutComponent
   ],
   imports: [
     BrowserModule,

@@ -2,6 +2,7 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 import {Artifact} from "../../shared/generated/domain";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
+import {ApikeyService} from "../../shared/apikey.service";
 
 @Component({
   selector: 'app-artifact-details',
@@ -12,7 +13,7 @@ export class ArtifactDetailsComponent implements OnInit {
 
   public tableData: string[][] = [];
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: Artifact, private sanitizer: DomSanitizer) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: Artifact, private sanitizer: DomSanitizer, private apikeyService: ApikeyService) {
     this.tableData.push(["Title", data.title]);
     this.tableData.push(["Additional Title", data.additionalTitle]);
     this.tableData.push(["Year", data.year.toString()]);
@@ -61,7 +62,7 @@ export class ArtifactDetailsComponent implements OnInit {
   }
 
   getStreetviewUrl(): SafeResourceUrl {
-    let url = `https://www.google.com/maps/embed/v1/streetview?key=AIzaSyBYV-WN6EWN4EBpHdq-5tr1x-mfpvFzPy4&location=${this.data.location.latitude}%2C${this.data.location.longitude}`;
+    let url = `https://www.google.com/maps/embed/v1/streetview?key=${this.apikeyService.googleApiKey}&location=${this.data.location.latitude}%2C${this.data.location.longitude}`;
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 }
